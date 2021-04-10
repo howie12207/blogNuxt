@@ -1,4 +1,4 @@
-const BASE_URL = '/'
+const BASE_URL = 'https://howie12207-blog.herokuapp.com/'
 
 export default {
   head: {
