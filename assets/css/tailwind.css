@@ -1,0 +1,78 @@
+/* ./assets/css/tailwind.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .content h1 {
+    @apply text-2xl font-extrabold my-2;
+  }
+
+  .content h2 {
+    @apply text-xl font-bold my-1;
+  }
+
+  .content h3 {
+    @apply text-lg font-bold my-1;
+  }
+
+  .content p {
+    @apply my-4;
+
+    text-indent: 2rem;
+  }
+
+  .content li {
+    @apply my-2 ml-8 text-sm;
+  }
+
+  .content ul li {
+    @apply list-disc;
+  }
+
+  .content ol li {
+    @apply list-decimal;
+  }
+
+  .content pre {
+    @apply rounded py-2 px-4 bg-black text-white whitespace-pre-wrap;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-1 transition-all cursor-pointer rounded text-center;
+  }
+
+  .btn-primary {
+    @apply text-red-500 border border-red-500;
+  }
+
+  .btn-primary:hover {
+    @apply bg-red-500 text-white;
+  }
+
+  .btn-primary-active {
+    @apply bg-red-500 text-white;
+  }
+
+  .btn-secondary {
+    @apply text-blue-500 border border-blue-500;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-blue-500 text-white;
+  }
+
+  .btn-secondary-active {
+    @apply bg-blue-500 text-white;
+  }
+
+  .btn-disabled {
+    @apply text-gray-400 border-gray-400 opacity-40;
+  }
+
+  .btn-disabled:hover {
+    @apply bg-gray-500 text-white cursor-not-allowed;
+  }
+}
