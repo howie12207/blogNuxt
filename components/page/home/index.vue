@@ -1,19 +1,19 @@
 <template>
   <div class="min-h-screen w-3/5 m-auto">
-    123
-    <!-- <ArticleCard /> -->
-    <!-- <ArticleCard v-for="card in articles" :key="card.id" :article="card" /> -->
-    <!-- <el-pagination
-      v-if="pageOption.total"
+    <PageHomeArticleCard
+      v-for="card in articles"
+      :key="card._id"
+      :article="card"
+    />
+    <el-pagination
+      v-if="total"
       class="text-center mb-8"
       background
-      layout="prev, pager, next"
-      :total="pageOption.total"
-      :page-size="pageOption.size"
-      :current-page="pageOption.page"
+      layout="total, prev, pager, next"
+      :total="total"
+      :current-page="Number($route.query.page) + 1 || page"
       @current-change="handleCurrentChange"
-    >
-    </el-pagination> -->
+    />
   </div>
 </template>
 
@@ -23,23 +23,30 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'HomePage',
   props: {
-    // articles: {
-    //   type: Array,
-    //   default: () => [],
-    // },
-    // pageOption: {
-    //   type: Object,
-    //   default: () => ({
-    //     page: 1,
-    //     size: 0,
-    //     total: 0,
-    //   }),
-    // },
+    articles: {
+      type: Array,
+      default: () => [],
+    },
+    page: {
+      type: Number,
+      default: 0,
+    },
+    size: {
+      type: Number,
+      default: 10,
+    },
+    total: {
+      type: Number,
+      default: 0,
+    },
   },
   methods: {
-    // handleCurrentChange(page: number) {
-    //   this.$emit('handleCurrentChange', page)
-    // },
+    handleCurrentChange(page: number) {
+      this.$emit('update:page', page - 1)
+      const query: any = { ...this.$route.query, page: page - 1 }
+      this.$emit('fetchArticles', query)
+      this.$router.push({ query })
+    },
   },
 })
 </script>
