@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <div @keyup.enter="login">
     <CommonBaseInput
-      v-model="mail.value"
-      label="電子信箱"
-      :is-valid.sync="mail.isValid"
-      :rules="mail.rules"
+      ref="accountInput"
+      v-model="account.value"
+      label="帳號"
+      :is-valid.sync="account.isValid"
+      :rules="account.rules"
     />
     <CommonBaseInput
       v-model="password.value"
@@ -15,9 +16,9 @@
     />
     <div class="flex justify-evenly">
       <div class="btn btn-primary hover:btn-primary" @click="login">登入</div>
-      <div class="btn btn-secondary hover:btn-secondary" @click="register">
+      <!-- <div class="btn btn-secondary hover:btn-secondary" @click="register">
         註冊
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -28,11 +29,13 @@ export default Vue.extend({
   name: 'Login',
   data() {
     return {
-      mail: {
+      account: {
         value: '',
         isValid: false,
         rules: {
-          limit: 'mail',
+          min: 6,
+          max: 20,
+          limit: 'enAndNumber',
         },
       },
       password: {
@@ -46,24 +49,21 @@ export default Vue.extend({
       },
     }
   },
-  created() {
-    if (process.client) {
-      // this.$message.success('123');
-    }
+  mounted() {
+    setTimeout(() => {
+      ;(this as any).$refs.accountInput?.$el.children[1].children[0].children[0].focus()
+    }, 16)
   },
   methods: {
     login() {
-      if (!this.mail.isValid || !this.password.isValid) {
-        // this.$message.error('請填寫正確信息')
+      if (!this.account.isValid || !this.password.isValid) {
+        this.$message.error('請填寫正確信息')
         return
       }
       this.$emit('login', {
-        mail: this.mail.value,
+        account: this.account.value,
         password: this.password.value,
       })
-    },
-    register() {
-      this.$emit('register')
     },
   },
 })

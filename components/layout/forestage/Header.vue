@@ -2,14 +2,19 @@
   <header
     class="fixed z-10 w-full bg-gray-600 h-14 flex justify-end items-center"
   >
-    <div class="btn btn-primary hover:btn-primary" @click="popup('login')">
-      <i class="el-icon-user icon"></i> 登入
+    <div class="btn btn-primary hover:btn-primary mr-4" @click="loginHandle">
+      <i class="el-icon-user icon"></i> 後台
     </div>
-    <CommonPopup v-if="popupTarget === 'login'" @close="closePopup">
-      <template #content>
-        <LayoutForstageLogin v-on="$listeners" />
-      </template>
-    </CommonPopup>
+    <transition name="fade">
+      <CommonPopup
+        v-if="popupTarget === 'login'"
+        width="400px"
+        @close="closePopup"
+      >
+        <template #content>
+          <LayoutForestageLogin class="p-12" v-on="$listeners" @login="login" />
+        </template> </CommonPopup
+    ></transition>
   </header>
 </template>
 
@@ -24,14 +29,26 @@ export default Vue.extend({
     }
   },
   methods: {
+    loginHandle() {
+      if (this.$store.state.user.login) {
+        this.$router.push('/backstage/manageArticle')
+        return
+      }
+      this.popup('login')
+    },
     popup(target: string) {
       this.popupTarget = target
-      // this.$message.success('123')
     },
     closePopup() {
       this.popupTarget = ''
     },
-    register() {},
+    async login(params: object) {
+      const res = await this.$store.dispatch('user/LOGIN', params)
+      if (res) {
+        this.$router.push('/backstage/manageArticle')
+        this.$message.success('登入成功')
+      }
+    },
   },
 })
 </script>

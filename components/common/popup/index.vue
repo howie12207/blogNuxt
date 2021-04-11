@@ -48,6 +48,7 @@ export default Vue.extend({
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    max-width: 100%;
     min-height: 50px;
     max-height: 90%;
     overflow: auto;
@@ -65,23 +66,32 @@ export default Vue.extend({
       border: 2px solid var(--xColor);
       border-radius: 50%;
       cursor: pointer;
-    }
-    .x_icon::after,
-    .x_icon::before {
-      content: '';
-      display: block;
-      box-sizing: border-box;
-      position: absolute;
-      width: 12px;
-      height: 2px;
-      background: var(--xColor);
-      transform: rotate(45deg);
-      border-radius: 5px;
-      top: 8px;
-      left: 3px;
-    }
-    .x_icon::after {
-      transform: rotate(-45deg);
+      transition: 0.3s;
+      &::after,
+      &::before {
+        content: '';
+        display: block;
+        box-sizing: border-box;
+        position: absolute;
+        width: 12px;
+        height: 2px;
+        background: var(--xColor);
+        transform: rotate(45deg);
+        border-radius: 5px;
+        top: 8px;
+        left: 3px;
+        transition: 0.3s;
+      }
+      &::after {
+        transform: rotate(-45deg);
+      }
+      &:hover {
+        background-color: var(--xColor);
+        &::after,
+        &::before {
+          background: #fff;
+        }
+      }
     }
   }
 }

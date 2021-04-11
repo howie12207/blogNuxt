@@ -5,8 +5,6 @@ export const state = () => ({
 
   pageLoading: false,
 
-  login: false,
-
   language: {
     current: {
       title: '',
@@ -59,8 +57,8 @@ export const mutations: MutationTree<RootState> = {
 }
 
 export const actions: ActionTree<RootState, RootState> = {
-  nuxtServerInit(store: any, { req }: any) {
-    // const userData = store.dispatch(FETCH_USER_DATA);
+  async nuxtServerInit(store: any, { req }: any) {
     store.commit('SET_IS_DESKTOP', req.headers['user-agent'])
+    await store.dispatch('user/FETCH_USER_DATA')
   },
 }

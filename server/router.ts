@@ -1,12 +1,40 @@
 const router = require('express').Router()
 const DB = require('./db')
 
+const USERINFO = 'userInfo'
 const SORT = 'sort'
 const ARTICLES = 'articles'
 
 // 測試用
 router.get('/test', (_: any, res: any) => {
   res.send('ok')
+})
+
+// 登入
+router.post('/user/login', async (req: any, res: any) => {
+  try {
+    const { account, password } = req.body
+    if (!account || !password) {
+      res.status(400).json({
+        status: 'error',
+        message: '參數有誤',
+      })
+      return
+    }
+    const params = { account, password }
+    const result = await DB.findOne(USERINFO, params)
+    result
+      ? res.send(true)
+      : res.status(400).json({
+          status: 'error',
+          message: '帳密錯誤',
+        })
+  } catch (err) {
+    res.status(err.code).json({
+      status: 'error',
+      message: err.body,
+    })
+  }
 })
 
 // 創建文章

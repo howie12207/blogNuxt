@@ -1,16 +1,16 @@
 import { ActionTree } from 'vuex'
 
-const PATH = 'nodeApi'
+const PATH = '/nodeApi'
 
 export const state = () => ({})
 
 export type RootState = ReturnType<typeof state>
 
 export const actions: ActionTree<RootState, RootState> = {
-  async TEST() {
-    const res = await this.$req(`${PATH}/test`, 'get', {}, true)
-    return res || false
-  },
+  // async TEST() {
+  //   const res = await this.$req(`${PATH}/test`, 'get', {}, true)
+  //   return res || false
+  // },
 
   async CREATE_ARTICLE(_, params) {
     const res = await this.$req(`${PATH}/create/article`, 'post', params, true)

@@ -1,4 +1,7 @@
-const BASE_URL = 'https://howie12207-blog.herokuapp.com/'
+const BASE_URL =
+  process.NODE_ENV !== 'production'
+    ? ''
+    : 'https://howie12207-blog.herokuapp.com'
 
 export default {
   head: {
@@ -26,7 +29,7 @@ export default {
     '@nuxtjs/tailwindcss',
   ],
 
-  modules: ['@nuxtjs/axios'],
+  modules: ['@nuxtjs/axios', 'cookie-universal-nuxt'],
 
   publicRuntimeConfig: {
     BASE_URL,
@@ -41,6 +44,10 @@ export default {
   },
 
   build: {},
+
+  router: {
+    middleware: ['auth'],
+  },
 
   serverMiddleware: ['~/server/index.ts'],
 }
