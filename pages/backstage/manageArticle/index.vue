@@ -2,7 +2,10 @@
   <LazyPageBackstageManageArticle
     class="flex-grow overflow-hidden"
     :articles="articles"
+    :page.sync="page"
+    :total="total"
     @deleteArticle="deleteArticle"
+    @fetchArticles="fetchArticles"
   />
 </template>
 
@@ -12,15 +15,19 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'ManageArticle',
   layout: 'backstage',
-  async asyncData({ store }) {
-    const res = await store.dispatch('nodeApi/FETCH_ARTICLES')
+  async asyncData({ store, query }) {
+    const res = await store.dispatch('article/FETCH_ARTICLES', query)
     return {
-      articles: res,
+      articles: res.content,
+      total: res.totalElements,
     }
   },
   data() {
     return {
       articles: [],
+      page: 0,
+      // size: 10,
+      total: 0,
       // pageOption: {
       //   page: 1,
       //   size: 10,
@@ -28,41 +35,16 @@ export default Vue.extend({
       // },
     }
   },
-  computed: {
-    // articles(): any {
-    //   const start = (this.pageOption.page - 1) * this.pageOption.size
-    //   const end = this.pageOption.page * this.pageOption.size
-    //   return this.totalArticles.slice(start, end)
-    // },
-  },
-  // watch: {
-  //   $route() {
-  //     this.setCurrentPage()
-  //   },
-  // },
   methods: {
-    async fetchArticles() {
-      const res = await this.$store.dispatch('nodeApi/FETCH_ARTICLES')
-      this.articles = res
+    async fetchArticles(params: object) {
+      const res = await this.$store.dispatch('article/FETCH_ARTICLES', params)
+      this.articles = res.content
+      this.total = res.totalElements
     },
     async deleteArticle(id: string) {
-      // await console.log(id)
-      await this.$store.dispatch('nodeApi/DELETE_ARTICLE', id)
-      await this.fetchArticles()
+      await this.$store.dispatch('article/DELETE_ARTICLE', id)
+      await this.fetchArticles(this.$route.query)
     },
-    // handleCurrentChange(page: number) {
-    //   this.pageOption.page = page
-    //   if (page === 1) {
-    //     this.$router.push({ query: {} as any })
-    //   } else {
-    //     this.$router.push({ query: { page } as any })
-    //   }
-    // },
-    // setCurrentPage() {
-    //   this.pageOption.page = this.$route.query?.page
-    //     ? Number(this.$route.query.page)
-    //     : 1
-    // },
   },
 })
 </script>

@@ -14,7 +14,7 @@ router.get('/test1', async (req: any, res: any) => {
   const params = req.query || {}
   try {
     const result = await DB.findCount(ARTICLES, params)
-    res.send(result)
+    res.json(result)
   } catch (err) {
     res.send(err)
   }
@@ -71,11 +71,23 @@ router.post('/article', async (req: any, res: any) => {
 
 // 取得所有文章
 router.get('/article', async (req: any, res: any) => {
-  const params = req.query || {}
-  const result = await DB.find(ARTICLES, params, {
-    createTime: -1,
-  })
-  res.send(result)
+  const {
+    where = {},
+    sort = { createTime: -1 },
+    page = 0,
+    size = 10,
+  } = req.query
+  const params = {
+    where,
+    sort,
+    limit: Number(size),
+    skip: Number(page) * Number(size),
+  }
+  const [content, totalElements] = await Promise.all([
+    DB.findTable(ARTICLES, params),
+    DB.findCount(ARTICLES, params),
+  ])
+  res.send({ content, totalElements })
 })
 
 // 取得指定文章

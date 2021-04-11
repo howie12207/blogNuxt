@@ -57,6 +57,20 @@ class DB {
     })
   }
 
+  insertMany(collectionName, json) {
+    return new Promise((resolve, reject) => {
+      this.connect().then((db) => {
+        db.collection(collectionName).insertMany(json, (err, result) => {
+          if (err) {
+            reject(err)
+            return
+          }
+          resolve(result)
+        })
+      })
+    })
+  }
+
   /**
    * 查找
    * @param {String} collectionName 表名
@@ -74,7 +88,27 @@ class DB {
               reject(err)
               return
             }
+            resolve(docs)
+          })
+      })
+    })
+  }
 
+  findTable(collectionName, json) {
+    return new Promise((resolve, reject) => {
+      this.connect().then((db) => {
+        const collection = db.collection(collectionName)
+        // 取得資料
+        collection
+          .find(json.where)
+          .sort(json.sort)
+          .limit(json.limit)
+          .skip(json.skip)
+          .toArray((err, docs) => {
+            if (err) {
+              reject(err)
+              return
+            }
             resolve(docs)
           })
       })
@@ -85,12 +119,11 @@ class DB {
     return new Promise((resolve, reject) => {
       this.connect().then((db) => {
         const collection = db.collection(collectionName)
-        collection.count(json, (err, docs) => {
+        collection.countDocuments(json.where, (err, docs) => {
           if (err) {
             reject(err)
             return
           }
-
           resolve(docs)
         })
       })

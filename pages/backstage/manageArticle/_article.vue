@@ -16,8 +16,8 @@ export default Vue.extend({
   name: 'ManageArticleId',
   layout: 'backstage',
   async asyncData({ store, params }) {
-    const res1 = store.dispatch('nodeApi/FETCH_SORTS')
-    const res2 = store.dispatch('nodeApi/FETCH_ARTICLE', params.article)
+    const res1 = store.dispatch('sort/FETCH_SORTS')
+    const res2 = store.dispatch('article/FETCH_ARTICLE', params.article)
     const [sortList, article] = await Promise.all([res1, res2])
     return {
       sortList,
@@ -26,7 +26,7 @@ export default Vue.extend({
   },
   methods: {
     async updateArticle(params: object) {
-      await this.$store.dispatch('nodeApi/UPDATE_ARTICLE', params)
+      await this.$store.dispatch('article/UPDATE_ARTICLE', params)
       this.$router.push('/backstage/manageArticle')
     },
   },

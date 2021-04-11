@@ -23,17 +23,16 @@
         >
       </div>
     </div>
-    <!-- <el-pagination
-      v-if="pageOption.total"
+    <el-pagination
+      v-if="total"
       class="text-center mb-8"
       background
-      layout="prev, pager, next"
-      :total="pageOption.total"
-      :page-size="pageOption.size"
-      :current-page="pageOption.page"
+      layout="total, prev, pager, next"
+      :total="total"
+      :current-page="Number($route.query.page) + 1 || page"
       @current-change="handleCurrentChange"
     >
-    </el-pagination> -->
+    </el-pagination>
   </div>
 </template>
 
@@ -46,6 +45,18 @@ export default Vue.extend({
     articles: {
       type: Array,
       default: () => [],
+    },
+    page: {
+      type: Number,
+      default: 0,
+    },
+    size: {
+      type: Number,
+      default: 10,
+    },
+    total: {
+      type: Number,
+      default: 0,
     },
     // pageOption: {
     //   type: Object,
@@ -67,8 +78,19 @@ export default Vue.extend({
       this.$emit('deleteArticle', id)
     },
     handleCurrentChange(page: number) {
-      this.$emit('handleCurrentChange', page)
+      this.$emit('update:page', page - 1)
+      const query: any = { ...this.$route.query, page: page - 1 }
+      this.$emit('fetchArticles', query)
+      this.$router.push({ query })
     },
+    // handleSizeChange(size: number) {
+    // console.log(size, this.page)
+    // this.$emit('update:page', 0)
+    // const query: any = { ...this.$route.query, size, page: 0 }
+    // this.$router.push({ query })
+    // this.$emit('update:size', size)
+    // this.$emit('fetchArticles', query)
+    // },
   },
 })
 </script>
