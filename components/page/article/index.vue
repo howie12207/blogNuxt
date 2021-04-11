@@ -1,5 +1,5 @@
 <template>
-  <div class="article p-20">
+  <div class="article p-10">
     <CommonBreadcrumbs class="mb-4" :nav="nav" />
     <div class="flex justify-between text-xs text-gray-400">
       <div>

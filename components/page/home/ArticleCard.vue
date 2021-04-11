@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <article class="mt-4 mb-12">
+  <article class="shadow-xl bg-red-50 rounded p-4 mt-4 mb-12">
     <div class="text-right text-xs mb-2">
       {{ $format.toDate(article.createTime) }}
     </div>

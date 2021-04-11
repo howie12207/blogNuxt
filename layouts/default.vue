@@ -1,9 +1,9 @@
 <template>
-  <div class="fore_stage">
+  <div class="fore_stage bg-yellow-50 min-h-screen">
     <LayoutForestageHeader />
     <div class="flex m-auto max-w-7xl pt-14">
       <Nuxt class="forestage_bottom" />
-      <LayoutForestageRightBar />
+      <!-- <LayoutForestageRightBar /> -->
     </div>
   </div>
 </template>
