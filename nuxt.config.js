@@ -1,5 +1,5 @@
 const BASE_URL =
-  process.NODE_ENV !== 'production'
+  process.env.NODE_ENV !== 'production'
     ? ''
     : 'https://howie12207-blog.herokuapp.com'
 
