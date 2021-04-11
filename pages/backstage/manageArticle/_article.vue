@@ -17,9 +17,7 @@ export default Vue.extend({
   layout: 'backstage',
   async asyncData({ store, params }) {
     const res1 = store.dispatch('nodeApi/FETCH_SORTS')
-    const res2 = store.dispatch('nodeApi/FETCH_ARTICLE', {
-      _id: params.article,
-    })
+    const res2 = store.dispatch('nodeApi/FETCH_ARTICLE', params.article)
     const [sortList, article] = await Promise.all([res1, res2])
     return {
       sortList,

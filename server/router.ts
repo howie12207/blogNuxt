@@ -10,6 +10,16 @@ router.get('/test', (_: any, res: any) => {
   res.send('ok')
 })
 
+router.get('/test1', async (req: any, res: any) => {
+  const params = req.query || {}
+  try {
+    const result = await DB.findCount(ARTICLES, params)
+    res.send(result)
+  } catch (err) {
+    res.send(err)
+  }
+})
+
 // 登入
 router.post('/user/login', async (req: any, res: any) => {
   try {
@@ -38,7 +48,7 @@ router.post('/user/login', async (req: any, res: any) => {
 })
 
 // 創建文章
-router.post('/create/article', async (req: any, res: any) => {
+router.post('/article', async (req: any, res: any) => {
   try {
     const { name, content, createTime, updateTime, sorts } = req.body
     if (!name || !content || !createTime || !updateTime) {
@@ -59,8 +69,23 @@ router.post('/create/article', async (req: any, res: any) => {
   }
 })
 
+// 取得所有文章
+router.get('/article', async (req: any, res: any) => {
+  const params = req.query || {}
+  const result = await DB.find(ARTICLES, params, {
+    createTime: -1,
+  })
+  res.send(result)
+})
+
+// 取得指定文章
+router.get('/article/:id', async (req: any, res: any) => {
+  const result = await DB.findOne(ARTICLES, { _id: req.params.id })
+  res.send(result)
+})
+
 // 更新指定文章
-router.put('/update/article', async (req: any, res: any) => {
+router.put('/article/:id', async (req: any, res: any) => {
   try {
     const { name, content, createTime, updateTime, sorts } = req.body
     if (!name || !content || !createTime || !updateTime) {
@@ -82,24 +107,8 @@ router.put('/update/article', async (req: any, res: any) => {
   }
 })
 
-// 取得所有文章
-router.get('/fetch/articles', async (req: any, res: any) => {
-  const params = req.query || {}
-  const result = await DB.find(ARTICLES, params, {
-    createTime: -1,
-  })
-  res.send(result)
-})
-
-// 取得指定文章
-router.get('/fetch/article', async (req: any, res: any) => {
-  const params = req.query || {}
-  const result = await DB.findOne(ARTICLES, params)
-  res.send(result)
-})
-
 // 刪除指定文章
-router.delete('/delete/article/:id', async (req: any, res: any) => {
+router.delete('/article/:id', async (req: any, res: any) => {
   if (!req.params.id) {
     res.status(400).json({
       status: 'error',
@@ -112,7 +121,7 @@ router.delete('/delete/article/:id', async (req: any, res: any) => {
 })
 
 // 創建分類
-router.post('/create/sort', async (req: any, res: any) => {
+router.post('/sort', async (req: any, res: any) => {
   try {
     const { name, createTime } = req.body
     if (!name || !createTime) {
@@ -133,7 +142,7 @@ router.post('/create/sort', async (req: any, res: any) => {
 })
 
 // 取得所有分類
-router.get('/fetch/sort', async (req: any, res: any) => {
+router.get('/sort', async (req: any, res: any) => {
   const params = req.query || {}
   const result = await DB.find(SORT, params, {
     createTime: -1,
@@ -142,7 +151,7 @@ router.get('/fetch/sort', async (req: any, res: any) => {
 })
 
 // 刪除指定分類
-router.delete('/delete/sort/:id', async (req: any, res: any) => {
+router.delete('/sort/:id', async (req: any, res: any) => {
   if (!req.params.id) {
     res.status(400).json({
       status: 'error',
@@ -153,35 +162,5 @@ router.delete('/delete/sort/:id', async (req: any, res: any) => {
   const result = await DB.remove(SORT, { _id: req.params.id })
   res.send(result)
 })
-
-// 創建
-// router.post('/create/:collection', async (req: any, res: any) => {
-//   try {
-//     // const { name, createTime } = req.body
-//     // if (!name || !createTime) {
-//     //   res.status(400).json({
-//     //     status: 'error',
-//     //     message: '參數有誤',
-//     //   })
-//     //   return
-//     // }
-//     const result = await DB.insert(req.params.collection, req.body)
-//     res.send(result)
-//   } catch (err) {
-//     res.status(err.code).json({
-//       status: 'error',
-//       message: err.body,
-//     })
-//   }
-// })
-
-// 取得
-// router.get('/fetch/:collection', async (req: any, res: any) => {
-//   const params = req.query || {}
-//   const result = await DB.find(req.params.collection, params, {
-//     createTime: -1,
-//   })
-//   res.send(result)
-// })
 
 module.exports = router

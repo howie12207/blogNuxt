@@ -13,46 +13,41 @@ export const actions: ActionTree<RootState, RootState> = {
   // },
 
   async CREATE_ARTICLE(_, params) {
-    const res = await this.$req(`${PATH}/create/article`, 'post', params, true)
+    const res = await this.$req(`${PATH}/article`, 'post', params, true)
     return !!res
   },
   async FETCH_ARTICLES() {
-    const res = await this.$req(`${PATH}/fetch/articles`, 'get', {})
+    const res = await this.$req(`${PATH}/article`, 'get', {})
     return res || []
   },
   async FETCH_ARTICLE(_, params) {
-    const res = await this.$req(`${PATH}/fetch/article`, 'get', params, true)
+    const res = await this.$req(`${PATH}/article/${params}`, 'get', {}, true)
     return res || {}
   },
-  async DELETE_ARTICLE(_, params) {
+  async UPDATE_ARTICLE(_, params) {
     const res = await this.$req(
-      `${PATH}/delete/article/${params}`,
-      'delete',
-      {},
+      `${PATH}/article/${params._id}`,
+      'put',
+      params,
       true
     )
+    return !!res
+  },
+  async DELETE_ARTICLE(_, params) {
+    const res = await this.$req(`${PATH}/article/${params}`, 'delete', {}, true)
     return !!res
   },
 
-  async UPDATE_ARTICLE(_, params) {
-    const res = await this.$req(`${PATH}/update/article`, 'put', params, true)
-    return !!res
-  },
   async FETCH_SORTS() {
-    const res = await this.$req(`${PATH}/fetch/sort`, 'get', {})
+    const res = await this.$req(`${PATH}/sort`, 'get', {})
     return res || []
   },
   async CREATE_SORT(_, params) {
-    const res = await this.$req(`${PATH}/create/sort`, 'post', params, true)
+    const res = await this.$req(`${PATH}/sort`, 'post', params, true)
     return !!res
   },
   async DELETE_SORT(_, params) {
-    const res = await this.$req(
-      `${PATH}/delete/sort/${params}`,
-      'delete',
-      {},
-      true
-    )
+    const res = await this.$req(`${PATH}/sort/${params}`, 'delete', {}, true)
     return !!res
   },
 }

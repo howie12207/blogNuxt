@@ -66,7 +66,6 @@ class DB {
     return new Promise((resolve, reject) => {
       this.connect().then((db) => {
         const collection = db.collection(collectionName)
-        if (json._id) json._id = ObjectId(json._id)
         collection
           .find(json)
           .sort(order)
@@ -78,6 +77,22 @@ class DB {
 
             resolve(docs)
           })
+      })
+    })
+  }
+
+  findCount(collectionName, json) {
+    return new Promise((resolve, reject) => {
+      this.connect().then((db) => {
+        const collection = db.collection(collectionName)
+        collection.count(json, (err, docs) => {
+          if (err) {
+            reject(err)
+            return
+          }
+
+          resolve(docs)
+        })
       })
     })
   }
