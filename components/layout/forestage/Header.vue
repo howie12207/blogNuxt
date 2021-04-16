@@ -2,8 +2,23 @@
   <header
     class="fixed z-10 w-full bg-gray-600 h-14 flex justify-end items-center"
   >
-    <div class="btn btn-primary hover:btn-primary mr-4" @click="loginHandle">
-      <i class="el-icon-user icon"></i> 後台
+    <div v-if="$store.state.user.login">
+      Hi, {{ $store.state.user.info.account }}
+      <nuxt-link
+        to="/backstage/manageArticle"
+        class="btn btn-primary hover:btn-primary mx-4"
+        >後台</nuxt-link
+      >
+      <span class="btn btn-secondary hover:btn-secondary mr-4" @click="logout"
+        >登出</span
+      >
+    </div>
+    <div
+      v-else
+      class="btn btn-primary hover:btn-primary mr-4"
+      @click="popup('login')"
+    >
+      <i class="el-icon-user icon"></i> 登入
     </div>
     <transition name="fade">
       <CommonPopup
@@ -29,13 +44,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    loginHandle() {
-      if (this.$store.state.user.login) {
-        this.$router.push('/backstage/manageArticle')
-        return
-      }
-      this.popup('login')
-    },
     popup(target: string) {
       this.popupTarget = target
     },
@@ -48,6 +56,11 @@ export default Vue.extend({
         this.$router.push('/backstage/manageArticle')
         this.$message.success('登入成功')
       }
+    },
+    logout() {
+      this.$store.commit('user/SET_USER', false)
+      this.$store.commit('user/SET_USER_INFO', null)
+      this.$message.success('已登出')
     },
   },
 })

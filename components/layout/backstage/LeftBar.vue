@@ -1,12 +1,12 @@
 <template>
-  <nav class="w-40 py-10 min-h-screen bg-gray-200">
+  <nav class="w-40 py-10 px-4 min-h-screen">
     <nuxt-link
       v-for="(item, index) in menu"
       :key="index"
       :to="item.route"
-      class="block text-red-700 p-2"
-      @click.native="menuHandle(item.title)"
+      class="block text-gray-700 p-2 rounded hover:bg-gray-200 active:bg-gray-200"
     >
+      <i :class="[item.icon, 'text-blue-400']"></i>
       {{ item.title }}
     </nuxt-link>
   </nav>
@@ -20,22 +20,30 @@ export default Vue.extend({
   data() {
     return {
       menu: [
-        { title: '新增文章', route: '/backstage/createArticle' },
-        { title: '管理文章', route: '/backstage/manageArticle' },
-        { title: '管理分類', route: '/backstage/manageSort' },
-        { title: '前台', route: '/' },
-        { title: '登出', route: '/' },
+        {
+          title: '新增文章',
+          route: '/backstage/createArticle',
+          icon: 'el-icon-edit',
+        },
+        {
+          title: '管理文章',
+          route: '/backstage/manageArticle',
+          icon: 'el-icon-tickets',
+        },
+        {
+          title: '管理分類',
+          route: '/backstage/manageSort',
+          icon: 'el-icon-s-grid',
+        },
       ],
     }
   },
-  methods: {
-    menuHandle(target: string) {
-      if (target !== '登出') return
-      ;(this as any).$cookies.remove('account')
-      ;(this as any).$cookies.remove('password')
-      this.$store.commit('user/SET_USER', false)
-      this.$message.success('已登出')
-    },
-  },
 })
 </script>
+
+<style lang="scss" scoped>
+.nuxt-link-exact-active {
+  background-color: rgba(229, 231, 235, 1);
+  color: #3b82f6;
+}
+</style>

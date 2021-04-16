@@ -1,7 +1,10 @@
 <template>
   <div class="flex">
-    <LayoutBackstageLeftBar class="flex-shrink-0" />
-    <Nuxt />
+    <LayoutBackstageLeftBar class="bg-gray-100 border-r flex-shrink-0" />
+    <div class="flex-1 w-1/2">
+      <LayoutBackstageHeader class="bg-gray-100 border-b" />
+      <Nuxt />
+    </div>
     <transition name="fade">
       <CommonPageLoading v-if="$store.state.pageLoading" />
     </transition>

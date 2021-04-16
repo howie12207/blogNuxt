@@ -31,6 +31,7 @@ export default Vue.extend({
       const res = await this.$store.dispatch('article/FETCH_ARTICLES', params)
       this.articles = res.content
       this.total = res.totalElements
+      window.scrollTo(0, 0)
     },
   },
 })

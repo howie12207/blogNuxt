@@ -1,10 +1,10 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <article class="shadow-xl bg-red-50 rounded p-4 mt-4 mb-12">
+  <article class="text-sm shadow-xl bg-red-50 rounded p-4 mt-4 mb-12">
     <div class="text-right text-xs mb-2">
       {{ $format.toDate(article.createTime) }}
     </div>
-    <div class="text-3xl mb-2 text-red-700 font-black">
+    <div class="text-xl mb-2 text-red-700 font-black">
       {{ article.name }}
     </div>
     <div
@@ -13,10 +13,10 @@
     ></div>
     <nuxt-link
       :to="`/article/${article._id}`"
-      class="text-red-400 underline inline-block my-1"
+      class="block text-red-400 text-right underline my-1 ml-auto w-max"
       >閱讀全文..</nuxt-link
     >
-    <div class="text-gray-500">
+    <div class="text-gray-500 text-xs">
       <span v-for="(item, index) in article.sorts" :key="index" class="mr-2"
         >#{{ item }}</span
       >

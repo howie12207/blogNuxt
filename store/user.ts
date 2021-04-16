@@ -4,6 +4,7 @@ const PATH = '/nodeApi/user'
 
 export const state = () => ({
   login: false,
+  info: null,
 })
 
 export type RootState = ReturnType<typeof state>
@@ -12,31 +13,29 @@ export const mutations: MutationTree<RootState> = {
   SET_USER(state, status) {
     state.login = status
   },
+  SET_USER_INFO(state, info) {
+    state.info = info
+  },
 }
 export const actions: ActionTree<RootState, RootState> = {
   async FETCH_USER_DATA({ commit }) {
-    const account = (this as any).$cookies.get('account')
-    const password = (this as any).$cookies.get('password')
-    if (account && password) {
-      const res = await this.$req(`${PATH}/login`, 'post', {
-        account,
-        password,
-      })
-      if (res) commit('SET_USER', true)
+    if (!(this as any).$cookies.get('access')) return
+    const res = await this.$req(`${PATH}/info`, 'get')
+    if (res) {
+      commit('SET_USER', true)
+      commit('SET_USER_INFO', res)
+    } else {
+      ;(this as any).$cookies.remove('access')
     }
   },
-  async LOGIN({ commit }, params) {
+  async LOGIN({ dispatch }, params) {
     const res = await this.$req(`${PATH}/login`, 'post', params, true)
     if (res) {
-      ;(this as any).$cookies.set('account', params.account, {
+      ;(this as any).$cookies.set('access', res.token, {
         path: '',
         maxAge: 60 * 60 * 24,
       })
-      ;(this as any).$cookies.set('password', params.password, {
-        path: '',
-        maxAge: 60 * 60 * 24,
-      })
-      commit('SET_USER', true)
+      dispatch('FETCH_USER_DATA')
     }
     return !!res
   },
