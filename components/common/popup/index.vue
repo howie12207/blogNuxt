@@ -95,4 +95,34 @@ export default Vue.extend({
     }
   }
 }
+@keyframes show {
+  0% {
+    opacity: 0;
+    top: -50%;
+  }
+  60% {
+    top: 50%;
+  }
+  75% {
+    top: 48%;
+  }
+  80% {
+    top: 48%;
+  }
+  100% {
+    top: 50%;
+    opacity: 1;
+  }
+}
+@keyframes hide {
+  0% {
+    opacity: 1;
+    top: 50%;
+  }
+
+  100% {
+    opacity: 0;
+    top: -50%;
+  }
+}
 </style>

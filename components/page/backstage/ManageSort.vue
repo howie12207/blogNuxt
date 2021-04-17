@@ -28,11 +28,26 @@
       <div class="item">
         <span
           class="btn btn-primary hover:btn-primary"
-          @click="deleteHandle(list._id)"
+          @click="popup('delete', list)"
           >刪除</span
         >
       </div>
     </div>
+    <transition name="fade">
+      <CommonPopup v-if="popupOpen === 'delete'" @close="closePopup">
+        <template #content>
+          <div class="text-center m-8">
+            確認要刪除分類 <span class="text-red-500">{{ tempData.name }}</span>
+          </div>
+          <div class="flex justify-evenly my-4">
+            <span class="btn btn-primary" @click="deleteHandle(tempData._id)"
+              >確認</span
+            >
+            <span class="btn btn-secondary" @click="closePopup">取消</span>
+          </div>
+        </template>
+      </CommonPopup>
+    </transition>
   </div>
 </template>
 
@@ -58,6 +73,8 @@ export default Vue.extend({
         value: '',
         isValid: true,
       },
+      popupOpen: '',
+      tempData: {},
     }
   },
   methods: {
@@ -74,6 +91,14 @@ export default Vue.extend({
     },
     deleteHandle(id: string) {
       this.$emit('deleteSort', id)
+      this.closePopup()
+    },
+    popup(target: string, sort: object) {
+      this.popupOpen = target
+      this.tempData = sort
+    },
+    closePopup() {
+      this.popupOpen = ''
     },
   },
 })
