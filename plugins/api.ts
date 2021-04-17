@@ -56,11 +56,11 @@ const requestModules: Plugin = (
         'color:white;background:#39f;padding: 2px 0.5em;'
       )
     }
-    if (response?.data?.code !== 1001 && response?.data?.msg) {
+    if (response?.data?.code !== 200 && response?.data?.message) {
       ;(Message as any).closeAll()
       Message({
         showClose: true,
-        message: response.data.msg,
+        message: response.data.message,
         type: 'error',
       })
     }
@@ -90,11 +90,14 @@ const requestModules: Plugin = (
       } else {
         redirect('/')
       }
-    } else if (error?.response?.status === 500 && error?.response?.data?.msg) {
+    } else if (
+      error?.response?.status === 500 &&
+      error?.response?.data?.message
+    ) {
       ;(Message as any).closeAll()
       Message({
         showClose: true,
-        message: error.response.data.msg,
+        message: error.response.data.message,
         type: 'error',
       })
     }

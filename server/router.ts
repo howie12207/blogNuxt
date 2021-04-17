@@ -17,7 +17,9 @@ router.get('/test1', async (req: any, res: any) => {
     const result = await DB.findCount(ARTICLES, params)
     res.json(result)
   } catch (err) {
-    res.send(err)
+    res
+      .status(500)
+      .json({ code: 500, status: 'error', mmessage: '系統錯誤，請稍後再試' })
   }
 })
 
@@ -26,7 +28,8 @@ router.post('/user/login', async (req: any, res: any) => {
   try {
     const { account, password } = req.body
     if (!account || !password) {
-      res.status(400).json({
+      res.status(500).json({
+        code: 400,
         status: 'error',
         message: '參數有誤',
       })
@@ -38,55 +41,81 @@ router.post('/user/login', async (req: any, res: any) => {
       const token = jwt.sign({ account, password }, process.env.JWT_KEY, {
         expiresIn: 60 * 60 * 24,
       })
-      res.status(200).json({ token })
+      res.json({ token })
     } else {
-      res.status(400).json({
+      res.status(500).json({
+        code: 400,
         status: 'error',
         message: '帳密錯誤',
       })
     }
   } catch (err) {
-    res.status(err.code).json({
+    res.status(500).json({
+      code: 500,
       status: 'error',
-      message: err.body,
+      message: '系統錯誤，請稍後再試',
     })
   }
 })
 
 // 取得所有文章
 router.get('/article', async (req: any, res: any) => {
-  const {
-    where = {},
-    sort = { createTime: -1 },
-    page = 0,
-    size = 10,
-  } = req.query
-  const params = {
-    where,
-    sort,
-    limit: Number(size),
-    skip: Number(page) * Number(size),
+  try {
+    const {
+      where = {},
+      sort = { createTime: -1 },
+      page = 0,
+      size = 10,
+    } = req.query
+    const params = {
+      where,
+      sort,
+      limit: Number(size),
+      skip: Number(page) * Number(size),
+    }
+    const [content, totalElements] = await Promise.all([
+      DB.findTable(ARTICLES, params),
+      DB.findCount(ARTICLES, params),
+    ])
+    res.send({ content, totalElements })
+  } catch (err) {
+    res.status(500).json({
+      code: 500,
+      status: 'error',
+      message: '系統錯誤，請稍後再試',
+    })
   }
-  const [content, totalElements] = await Promise.all([
-    DB.findTable(ARTICLES, params),
-    DB.findCount(ARTICLES, params),
-  ])
-  res.send({ content, totalElements })
 })
 
 // 取得指定文章
 router.get('/article/:id', async (req: any, res: any) => {
-  const result = await DB.findOne(ARTICLES, { _id: req.params.id })
-  res.send(result)
+  try {
+    const result = await DB.findOne(ARTICLES, { _id: req.params.id })
+    res.send(result)
+  } catch (err) {
+    res.status(500).json({
+      code: 500,
+      status: 'error',
+      message: '系統錯誤，請稍後再試',
+    })
+  }
 })
 
 // 取得所有分類
 router.get('/sort', async (req: any, res: any) => {
-  const params = req.query || {}
-  const result = await DB.find(SORT, params, {
-    createTime: -1,
-  })
-  res.send(result)
+  try {
+    const params = req.query || {}
+    const result = await DB.find(SORT, params, {
+      createTime: -1,
+    })
+    res.send(result)
+  } catch (err) {
+    res.status(500).json({
+      code: 500,
+      status: 'error',
+      message: '系統錯誤，請稍後再試',
+    })
+  }
 })
 
 // 驗證token
@@ -94,7 +123,9 @@ router.all('*', (req: any, res: any, next: any) => {
   const token = req.headers['x-auth-token']
   jwt.verify(token, process.env.JWT_KEY, (err: any) => {
     if (err) {
-      return res.status(401).json({ message: 'Unauthorized!' })
+      return res
+        .status(401)
+        .json({ code: 401, status: 'error', message: 'Unauthorized!' })
     } else {
       next()
     }
@@ -114,9 +145,49 @@ router.get('/user/info', async (req: any, res: any) => {
       }
       return res.json(userInfo)
     }
-    return res.status(401).json({ message: 'Unauthorized!' })
+    return res
+      .status(401)
+      .json({ code: 401, status: 'error', message: 'Unauthorized!' })
   } catch (err) {
-    res.send(err)
+    res.status(500).json({
+      code: 500,
+      status: 'error',
+      message: '系統錯誤，請稍後再試',
+    })
+  }
+})
+
+// 修改密碼
+router.put('/user/password', async (req: any, res: any) => {
+  const token = req.headers['x-auth-token']
+  try {
+    const decode = jwt.decode(token, process.env.JWT_KEY)
+    const findAccount = await DB.findOne(USERINFO, { account: decode.account })
+    if (findAccount) {
+      const { oldPassword, newPassword } = req.body
+      if (findAccount.password === oldPassword) {
+        const result = await DB.update(
+          USERINFO,
+          { _id: findAccount._id },
+          {
+            password: newPassword,
+          }
+        )
+        return res.json(result)
+      }
+      return res
+        .status(500)
+        .json({ code: 400, status: 'error', message: '密碼錯誤!' })
+    }
+    return res
+      .status(401)
+      .json({ code: 401, status: 'error', message: 'Unauthorized!' })
+  } catch (err) {
+    res.status(500).json({
+      code: 500,
+      status: 'error',
+      message: '系統錯誤，請稍後再試',
+    })
   }
 })
 
@@ -125,7 +196,8 @@ router.post('/article', async (req: any, res: any) => {
   try {
     const { name, content, createTime, updateTime, sorts } = req.body
     if (!name || !content || !createTime || !updateTime) {
-      res.status(400).json({
+      res.status(500).json({
+        code: 400,
         status: 'error',
         message: '參數有誤',
       })
@@ -135,9 +207,10 @@ router.post('/article', async (req: any, res: any) => {
     const result = await DB.insert(ARTICLES, params)
     res.send(result)
   } catch (err) {
-    res.status(err.code).json({
+    res.status(500).json({
+      code: 500,
       status: 'error',
-      message: err.body,
+      message: '系統錯誤，請稍後再試',
     })
   }
 })
@@ -147,7 +220,8 @@ router.put('/article/:id', async (req: any, res: any) => {
   try {
     const { name, content, createTime, updateTime, sorts } = req.body
     if (!name || !content || !createTime || !updateTime) {
-      res.status(400).json({
+      res.status(500).json({
+        code: 400,
         status: 'error',
         message: '參數有誤',
       })
@@ -158,24 +232,33 @@ router.put('/article/:id', async (req: any, res: any) => {
     const result = await DB.update(ARTICLES, _id, params)
     res.send(result)
   } catch (err) {
-    res.status(err.code).json({
+    res.status(500).json({
+      code: 500,
       status: 'error',
-      message: err.body,
+      message: '系統錯誤，請稍後再試',
     })
   }
 })
 
 // 刪除指定文章
 router.delete('/article/:id', async (req: any, res: any) => {
-  if (!req.params.id) {
-    res.status(400).json({
+  try {
+    if (!req.params.id) {
+      res.status(400).json({
+        status: 'error',
+        message: '參數有誤',
+      })
+      return
+    }
+    const result = await DB.remove(ARTICLES, { _id: req.params.id })
+    res.send(result)
+  } catch (err) {
+    res.status(500).json({
+      code: 500,
       status: 'error',
-      message: '參數有誤',
+      message: '系統錯誤，請稍後再試',
     })
-    return
   }
-  const result = await DB.remove(ARTICLES, { _id: req.params.id })
-  res.send(result)
 })
 
 // 創建分類
@@ -183,7 +266,8 @@ router.post('/sort', async (req: any, res: any) => {
   try {
     const { name, createTime } = req.body
     if (!name || !createTime) {
-      res.status(400).json({
+      res.status(500).json({
+        code: 400,
         status: 'error',
         message: '參數有誤',
       })
@@ -192,24 +276,34 @@ router.post('/sort', async (req: any, res: any) => {
     const result = await DB.insert(SORT, req.body)
     res.send(result)
   } catch (err) {
-    res.status(err.code).json({
+    res.status(500).json({
+      code: 500,
       status: 'error',
-      message: err.body,
+      message: '系統錯誤，請稍後再試',
     })
   }
 })
 
 // 刪除指定分類
 router.delete('/sort/:id', async (req: any, res: any) => {
-  if (!req.params.id) {
-    res.status(400).json({
+  try {
+    if (!req.params.id) {
+      res.status(500).json({
+        code: 400,
+        status: 'error',
+        message: '參數有誤',
+      })
+      return
+    }
+    const result = await DB.remove(SORT, { _id: req.params.id })
+    res.send(result)
+  } catch (err) {
+    res.status(500).json({
+      code: 500,
       status: 'error',
-      message: '參數有誤',
+      message: '系統錯誤，請稍後再試',
     })
-    return
   }
-  const result = await DB.remove(SORT, { _id: req.params.id })
-  res.send(result)
 })
 
 module.exports = router

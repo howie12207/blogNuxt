@@ -1,6 +1,7 @@
 <template>
   <div class="p-8">
     <CommonBaseInput
+      ref="oldPassword"
       v-model="oldPassword.value"
       label="密碼"
       placeholder="請輸入舊密碼"
@@ -9,6 +10,7 @@
       :rules="oldPassword.rules"
     />
     <CommonBaseInput
+      ref="newPassword"
       v-model="newPassword.value"
       label="新密碼"
       placeholder="請輸入新密碼"
@@ -18,6 +20,7 @@
       @onKeyup="confirmPasswordHandler"
     />
     <CommonBaseInput
+      ref="confirmPassword"
       v-model="confirmPassword.value"
       label="確認新密碼"
       placeholder="請再次輸入新密碼"
@@ -28,6 +31,10 @@
       @onKeyup="confirmPasswordHandler"
       @onBlur="confirmPasswordHandler"
     />
+    <div>
+      <span class="btn btn-primary mx-4" @click="updatePassword">確認修改</span>
+      <span class="btn btn-secondary mx-4" @click="cancel">取消</span>
+    </div>
   </div>
 </template>
 
@@ -56,7 +63,33 @@ export default Vue.extend({
       },
     }
   },
+  computed: {
+    isValid(): boolean {
+      return (
+        this.oldPassword.isValid &&
+        this.newPassword.isValid &&
+        this.confirmPassword.isValid
+      )
+    },
+  },
   methods: {
+    updatePassword() {
+      if (!this.isValid) {
+        this.$message.error('請填入正確信息')
+        return
+      }
+      const params = {
+        account: this.$store.state.user.info.account,
+        oldPassword: this.oldPassword.value,
+        newPassword: this.newPassword.value,
+      }
+      this.$emit('updatePassword', params)
+    },
+    cancel() {
+      ;(this as any).$refs.oldPassword.clear()
+      ;(this as any).$refs.newPassword.clear()
+      ;(this as any).$refs.confirmPassword.clear()
+    },
     confirmPasswordHandler() {
       if (this.newPassword.value !== this.confirmPassword.value) {
         this.confirmPassword.errorMessage = '密碼不一致'

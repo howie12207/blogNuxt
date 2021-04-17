@@ -1,7 +1,9 @@
 <template>
   <div class="h-12 flex items-center justify-end">
     <el-dropdown class="mr-4" @command="handleMenu">
-      <span>Hi, {{ $store.state.user.info.account }}</span>
+      <span v-if="$store.state.user.info"
+        >Hi, {{ $store.state.user.info.account }}</span
+      >
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item icon="el-icon-setting" command="setting"
           >設定</el-dropdown-item
@@ -39,7 +41,7 @@ export default Vue.extend({
       this.$router.push('/')
       this.$store.commit('user/SET_USER', false)
       this.$store.commit('user/SET_USER_INFO', null)
-      ;(this as any).$cookies.remove('access')
+      ;(this as any).$cookies.remove('access', { path: '*' })
       this.$message.success('已登出')
     },
   },

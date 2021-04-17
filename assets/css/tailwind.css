@@ -41,7 +41,7 @@
 
 @layer components {
   .btn {
-    @apply px-4 py-1 transition-all cursor-pointer rounded text-center;
+    @apply inline-block px-4 py-1 transition-all cursor-pointer rounded text-center;
   }
 
   .btn-primary {

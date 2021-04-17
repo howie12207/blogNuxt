@@ -67,7 +67,7 @@ export default Vue.extend({
     logout() {
       this.$store.commit('user/SET_USER', false)
       this.$store.commit('user/SET_USER_INFO', null)
-      ;(this as any).$cookies.remove('access')
+      ;(this as any).$cookies.remove('access', { path: '*' })
       this.$message.success('已登出')
     },
     popup(target: string) {

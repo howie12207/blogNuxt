@@ -39,4 +39,10 @@ export const actions: ActionTree<RootState, RootState> = {
     }
     return !!res
   },
+  async UPDATE_PASSWORD(_, params) {
+    const res = await this.$req(`${PATH}/password`, 'put', params)
+    if (res) {
+      return !!res
+    }
+  },
 }
