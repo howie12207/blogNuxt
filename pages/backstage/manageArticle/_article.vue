@@ -27,7 +27,7 @@ export default Vue.extend({
   methods: {
     async updateArticle(params: object) {
       await this.$store.dispatch('article/UPDATE_ARTICLE', params)
-      this.$router.push('/backstage/manageArticle')
+      this.$router.go(-1)
     },
   },
 })

@@ -2,17 +2,23 @@
   <header
     class="fixed z-10 w-full bg-gray-600 h-14 flex justify-end items-center"
   >
-    <div v-if="$store.state.user.login">
-      Hi, {{ $store.state.user.info.account }}
-      <nuxt-link
-        to="/backstage/manageArticle"
-        class="btn btn-primary hover:btn-primary mx-4"
-        >後台</nuxt-link
+    <el-dropdown
+      v-if="$store.state.user.login"
+      class="mr-4"
+      @command="handleMenu"
+    >
+      <span class="text-gray-200"
+        >Hi, {{ $store.state.user.info.account }}</span
       >
-      <span class="btn btn-secondary hover:btn-secondary mr-4" @click="logout"
-        >登出</span
-      >
-    </div>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item icon="el-icon-s-data" command="backstage"
+          >後台</el-dropdown-item
+        >
+        <el-dropdown-item icon="el-icon-switch-button" command="logout"
+          >登出</el-dropdown-item
+        >
+      </el-dropdown-menu>
+    </el-dropdown>
     <div
       v-else
       class="btn btn-primary hover:btn-primary mr-4"
@@ -44,23 +50,31 @@ export default Vue.extend({
     }
   },
   methods: {
-    popup(target: string) {
-      this.popupTarget = target
-    },
-    closePopup() {
-      this.popupTarget = ''
+    handleMenu(target: string) {
+      if (target === 'backstage') {
+        this.$router.push('/backstage/manageArticle')
+      } else {
+        this.logout()
+      }
     },
     async login(params: object) {
       const res = await this.$store.dispatch('user/LOGIN', params)
       if (res) {
-        this.$router.push('/backstage/manageArticle')
+        this.closePopup()
         this.$message.success('登入成功')
       }
     },
     logout() {
       this.$store.commit('user/SET_USER', false)
       this.$store.commit('user/SET_USER_INFO', null)
+      ;(this as any).$cookies.remove('access')
       this.$message.success('已登出')
+    },
+    popup(target: string) {
+      this.popupTarget = target
+    },
+    closePopup() {
+      this.popupTarget = ''
     },
   },
 })

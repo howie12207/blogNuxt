@@ -65,7 +65,7 @@ const requestModules: Plugin = (
       })
     }
     if (response?.data?.code === 401) {
-      // app.$cookies.remove('access')
+      app.$cookies.remove('access')
       if (process.client) {
         window.location.href = '/'
       } else {
@@ -84,7 +84,7 @@ const requestModules: Plugin = (
     /* eslint-disable-next-line */
     console.error('Axios onError: ', error)
     if (error?.response?.status === 401) {
-      // app.$cookies.remove('access')
+      app.$cookies.remove('access')
       if (process.client) {
         window.location.href = '/'
       } else {

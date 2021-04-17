@@ -1,12 +1,19 @@
 <template>
   <div class="h-12 flex items-center justify-end">
-    <span>Hi, {{ $store.state.user.info.account }}</span>
-    <nuxt-link to="/" class="btn btn-primary hover:btn-primary mx-4"
-      >前台</nuxt-link
-    >
-    <span class="btn btn-secondary hover:btn-secondary mr-4" @click="logout"
-      >登出</span
-    >
+    <el-dropdown class="mr-4" @command="handleMenu">
+      <span>Hi, {{ $store.state.user.info.account }}</span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item icon="el-icon-setting" command="setting"
+          >設定</el-dropdown-item
+        >
+        <el-dropdown-item icon="el-icon-s-home" command="forestage"
+          >前台</el-dropdown-item
+        >
+        <el-dropdown-item icon="el-icon-switch-button" command="logout"
+          >登出</el-dropdown-item
+        >
+      </el-dropdown-menu>
+    </el-dropdown>
   </div>
 </template>
 
@@ -19,9 +26,20 @@ export default Vue.extend({
     return {}
   },
   methods: {
+    handleMenu(target: string) {
+      if (target === 'setting') {
+        this.$router.push('/backstage/setting')
+      } else if (target === 'forestage') {
+        this.$router.push('/')
+      } else {
+        this.logout()
+      }
+    },
     logout() {
+      this.$router.push('/')
       this.$store.commit('user/SET_USER', false)
       this.$store.commit('user/SET_USER_INFO', null)
+      ;(this as any).$cookies.remove('access')
       this.$message.success('已登出')
     },
   },

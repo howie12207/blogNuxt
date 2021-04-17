@@ -1,5 +1,6 @@
 <template>
-  <nav class="w-40 py-10 px-4 min-h-screen">
+  <nav class="w-40 pb-10 px-4 min-h-screen">
+    <img class="w-12 mx-auto mb-2" src="../img/logo.png" alt="logo" />
     <nuxt-link
       v-for="(item, index) in menu"
       :key="index"
