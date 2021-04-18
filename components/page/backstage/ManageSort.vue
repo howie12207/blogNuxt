@@ -15,22 +15,24 @@
         新增分類
       </div>
     </div>
-    <div class="flex">
-      <div class="item font-bold">創建時間</div>
-      <div class="item font-bold">標題</div>
-      <div class="item font-bold">操作</div>
-    </div>
-    <div v-for="list in sortList" :key="list.id" class="flex">
-      <div class="item">
-        {{ $format.toDateTime(list.createTime) }}
+    <div class="m-4 card">
+      <div class="flex bg-red-100">
+        <div class="item font-bold">創建時間</div>
+        <div class="item font-bold">標題</div>
+        <div class="item font-bold">操作</div>
       </div>
-      <div class="item">{{ list.name }}</div>
-      <div class="item">
-        <span
-          class="btn btn-primary hover:btn-primary"
-          @click="popup('delete', list)"
-          >刪除</span
-        >
+      <div v-for="list in sortList" :key="list.id" class="flex">
+        <div class="item">
+          {{ $format.toDateTime(list.createTime) }}
+        </div>
+        <div class="item">{{ list.name }}</div>
+        <div class="item">
+          <span
+            class="btn btn-primary hover:btn-primary"
+            @click="popup('delete', list)"
+            >刪除</span
+          >
+        </div>
       </div>
     </div>
     <transition name="fade">

@@ -1,13 +1,13 @@
 <template>
   <header
-    class="fixed z-10 w-full bg-gray-600 h-14 flex justify-end items-center"
+    class="fixed z-10 w-full bg-gray-600 bg-opacity-90 h-14 flex justify-end items-center"
   >
     <el-dropdown
       v-if="$store.state.user.login"
       class="mr-4"
       @command="handleMenu"
     >
-      <span class="text-gray-200"
+      <span class="text-gray-200 cursor-default"
         >Hi, {{ $store.state.user.info.account }}</span
       >
       <el-dropdown-menu slot="dropdown">

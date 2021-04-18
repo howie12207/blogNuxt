@@ -1,23 +1,25 @@
 <template>
   <div>
-    <div class="flex">
-      <div class="item font-bold">創建時間</div>
-      <div class="item font-bold">文章標題</div>
-      <div class="item font-bold">留言內容</div>
-      <div class="item font-bold">操作</div>
-    </div>
-    <div v-for="(list, index) in commentList" :key="index" class="flex">
-      <div class="item">
-        {{ $format.toDateTime(list.createTime) }}
+    <div class="m-4 card">
+      <div class="flex bg-red-100">
+        <div class="item font-bold">創建時間</div>
+        <div class="item font-bold">文章標題</div>
+        <div class="item font-bold">留言內容</div>
+        <div class="item font-bold">操作</div>
       </div>
-      <div class="item">{{ list.articleId }}</div>
-      <div class="item">{{ list.content }}</div>
-      <div class="item">
-        <span
-          class="btn btn-primary hover:btn-primary"
-          @click="popup('delete', list)"
-          >刪除</span
-        >
+      <div v-for="(list, index) in commentList" :key="index" class="flex">
+        <div class="item">
+          {{ $format.toDateTime(list.createTime) }}
+        </div>
+        <div class="item">{{ list.articleId }}</div>
+        <div class="item">{{ list.content }}</div>
+        <div class="item">
+          <span
+            class="btn btn-primary hover:btn-primary"
+            @click="popup('delete', list)"
+            >刪除</span
+          >
+        </div>
       </div>
     </div>
     <el-pagination

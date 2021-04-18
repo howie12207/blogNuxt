@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div class="p-4 m-4 card">
     <CommonBaseInput
       v-model="name.value"
       label="標題"

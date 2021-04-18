@@ -1,7 +1,7 @@
 <template>
   <div class="h-12 flex items-center justify-end">
     <el-dropdown class="mr-4" @command="handleMenu">
-      <span v-if="$store.state.user.info"
+      <span v-if="$store.state.user.info" class="cursor-default"
         >Hi, {{ $store.state.user.info.account }}</span
       >
       <el-dropdown-menu slot="dropdown">

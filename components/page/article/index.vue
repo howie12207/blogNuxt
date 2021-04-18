@@ -1,7 +1,7 @@
 <template>
-  <div class="article p-10">
+  <div class="article p-10 m-4 bg-red-50 rounded shadow">
     <CommonBreadcrumbs class="mb-4" :nav="nav" />
-    <div class="flex justify-between text-xs text-gray-400">
+    <div class="flex justify-between text-xs text-gray-500">
       <div>
         建立時間：
         {{ $format.toDateTime(article.createTime) }}
@@ -16,7 +16,7 @@
     </div>
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div class="content" v-html="article.content"></div>
-    <div class="mt-12 text-gray-500">
+    <div class="mt-12 text-yellow-700">
       <span v-for="(item, index) in article.sorts" :key="index" class="mr-2"
         >#{{ item }}</span
       >
@@ -29,7 +29,7 @@
     <div
       v-for="(comment, index) of comments"
       :key="index"
-      class="p-4 my-4 bg-red-50 rounded"
+      class="p-4 my-4 bg-red-100 rounded shadow"
     >
       <p class="text-gray-500 font-bold">
         {{ comment.account }}
@@ -42,7 +42,7 @@
     <textarea
       v-model="commentText"
       placeholder="請輸入留言內容"
-      class="p-4 w-full resize-none transition-all"
+      class="p-4 w-full focus:outline-none shadow focus:ring-1 bg-gray-200 rounded resize-none transition-shadow"
       rows="10"
     />
     <div class="text-right">

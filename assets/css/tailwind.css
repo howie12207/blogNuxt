@@ -75,4 +75,8 @@
   .btn-disabled:hover {
     @apply bg-gray-500 text-white cursor-not-allowed;
   }
+
+  .card {
+    @apply rounded shadow overflow-hidden bg-red-50;
+  }
 }
