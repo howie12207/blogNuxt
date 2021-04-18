@@ -21,6 +21,33 @@
         >#{{ item }}</span
       >
     </div>
+    <div
+      class="text-3xl my-4 py-4 font-bold border-solid border-t-4 border-b-4 border-light-blue-500"
+    >
+      留言區
+    </div>
+    <div
+      v-for="(comment, index) of comments"
+      :key="index"
+      class="p-4 my-4 bg-red-50 rounded"
+    >
+      <p class="text-gray-500 font-bold">
+        {{ comment.account }}
+        <span class="text-xs text-gray-400"
+          >({{ $format.toDateTime(comment.createTime) }})</span
+        >
+      </p>
+      <p class="comment_content text-sm">{{ comment.content }}</p>
+    </div>
+    <textarea
+      v-model="commentText"
+      placeholder="請輸入留言內容"
+      class="p-4 w-full resize-none transition-all"
+      rows="10"
+    />
+    <div class="text-right">
+      <span class="btn btn-primary" @click="createComment">送出</span>
+    </div>
   </div>
 </template>
 
@@ -34,14 +61,47 @@ export default Vue.extend({
       type: Object,
       default: () => ({}),
     },
+    comments: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  data() {
+    return {
+      commentText: '',
+    }
   },
   computed: {
-    nav() {
+    nav(): object[] {
       return [
         { title: '首頁', route: '/' },
         { title: (this as any).article?.name, route: '' },
       ]
     },
   },
+  methods: {
+    createComment() {
+      if (!this.$store.state.user.login) this.$message.error('請先登入')
+      else if (!this.commentText.trim()) this.$message.error('請填寫內容')
+      else {
+        const params = {
+          createTime: Date.now(),
+          account: this.$store.state.user?.info?.account,
+          content: this.commentText,
+          articleId: this.$route.params.article,
+        }
+        this.$emit('createComment', params)
+      }
+    },
+    clear() {
+      this.commentText = ''
+    },
+  },
 })
 </script>
+
+<style lang="scss" scoped>
+.comment_content {
+  text-indent: 2rem;
+}
+</style>

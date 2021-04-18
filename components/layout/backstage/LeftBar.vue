@@ -32,6 +32,11 @@ export default Vue.extend({
           icon: 'el-icon-tickets',
         },
         {
+          title: '管理留言',
+          route: '/backstage/manageComment',
+          icon: 'el-icon-edit-outline',
+        },
+        {
           title: '管理分類',
           route: '/backstage/manageSort',
           icon: 'el-icon-s-grid',

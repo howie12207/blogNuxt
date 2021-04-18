@@ -1,10 +1,8 @@
 <template>
-  <div class="container">
-    <LazyPageBackstageCreateArticle
-      :sort-list="sortList"
-      @createArticle="createArticle"
-    />
-  </div>
+  <LazyPageBackstageCreateArticle
+    :sort-list="sortList"
+    @createArticle="createArticle"
+  />
 </template>
 
 <script lang="ts">

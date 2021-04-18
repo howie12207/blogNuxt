@@ -1,5 +1,4 @@
 const MongoClient = require('mongodb').MongoClient
-const ObjectId = require('mongodb').ObjectId
 
 class DB {
   // 单例模式
@@ -98,6 +97,7 @@ class DB {
     return new Promise((resolve, reject) => {
       this.connect().then((db) => {
         const collection = db.collection(collectionName)
+
         // 取得資料
         collection
           .find(json.where)
@@ -134,7 +134,6 @@ class DB {
     return new Promise((resolve, reject) => {
       this.connect().then((db) => {
         const collection = db.collection(collectionName)
-        if (json._id) json._id = ObjectId(json._id)
         collection.findOne(json, (err, docs) => {
           if (err) {
             reject(err)
@@ -155,11 +154,28 @@ class DB {
    */
   update(collectionName, json1, json2) {
     return new Promise((resolve, reject) => {
-      if (json1._id) json1._id = ObjectId(json1._id)
       this.connect().then((db) => {
         db.collection(collectionName).updateOne(
           json1,
           { $set: json2 },
+          (err, result) => {
+            if (err) {
+              reject(err)
+              return
+            }
+            resolve(result)
+          }
+        )
+      })
+    })
+  }
+
+  updatePush(collectionName, json1, json2) {
+    return new Promise((resolve, reject) => {
+      this.connect().then((db) => {
+        db.collection(collectionName).updateOne(
+          json1,
+          { $push: json2 },
           (err, result) => {
             if (err) {
               reject(err)
@@ -178,7 +194,6 @@ class DB {
    * @param {*} json 查找条件
    */
   remove(collectionName, json) {
-    if (json._id) json._id = ObjectId(json._id)
     return new Promise((resolve, reject) => {
       this.connect().then((db) => {
         db.collection(collectionName).removeOne(json, (err, result) => {

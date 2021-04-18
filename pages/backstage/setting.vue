@@ -1,5 +1,5 @@
 <template>
-  <PageBackstageSetting ref="setting" @updatePassword="updatePassword" />
+  <LazyPageBackstageSetting ref="setting" @updatePassword="updatePassword" />
 </template>
 
 <script lang="ts">
