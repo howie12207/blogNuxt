@@ -89,6 +89,12 @@ export default Vue.extend({
       tempData: {},
     }
   },
+  mounted() {
+    window.addEventListener('popstate', this.fetchCommentList)
+  },
+  beforeDestroy() {
+    window.removeEventListener('popstate', this.fetchCommentList)
+  },
   methods: {
     deleteHandle(id: string) {
       this.$emit('deleteComment', id)
@@ -102,9 +108,18 @@ export default Vue.extend({
       this.popupOpen = ''
     },
     handleCurrentChange(page: number) {
-      this.$emit('update:page', page - 1)
-      const query: any = { ...this.$route.query, page: page - 1 }
+      this.fetchCommentList(page - 1)
+      this.updateQuery(page - 1)
+    },
+    fetchCommentList(page: number | object) {
+      // 判斷若是上下頁動作則另外補上query
+      if (typeof page === 'object') page = Number(this.$route.query.page) || 0
+      const query: any = { ...this.$route.query, page: page || undefined }
+      this.$emit('update:page', page)
       this.$emit('fetchCommentList', query)
+    },
+    updateQuery(page: number) {
+      const query: any = { ...this.$route.query, page: page || undefined }
       this.$router.push({ query })
     },
   },

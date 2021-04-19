@@ -40,11 +40,26 @@ export default Vue.extend({
       default: 0,
     },
   },
+  mounted() {
+    window.addEventListener('popstate', this.fetchArticles)
+  },
+  beforeDestroy() {
+    window.removeEventListener('popstate', this.fetchArticles)
+  },
   methods: {
     handleCurrentChange(page: number) {
-      this.$emit('update:page', page - 1)
-      const query: any = { ...this.$route.query, page: page - 1 }
+      this.fetchArticles(page - 1)
+      this.updateQuery(page - 1)
+    },
+    fetchArticles(page: number | object) {
+      // 判斷若是上下頁動作則另外補上query
+      if (typeof page === 'object') page = Number(this.$route.query.page) || 0
+      const query: any = { ...this.$route.query, page: page || undefined }
+      this.$emit('update:page', page)
       this.$emit('fetchArticles', query)
+    },
+    updateQuery(page: number) {
+      const query: any = { ...this.$route.query, page: page || undefined }
       this.$router.push({ query })
     },
   },

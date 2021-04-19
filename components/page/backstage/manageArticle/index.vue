@@ -75,20 +75,18 @@ export default Vue.extend({
       type: Number,
       default: 0,
     },
-    // pageOption: {
-    //   type: Object,
-    //   default: () => ({
-    //     page: 1,
-    //     size: 0,
-    //     total: 0,
-    //   }),
-    // },
   },
   data() {
     return {
       popupOpen: '',
       tempData: {},
     }
+  },
+  mounted() {
+    window.addEventListener('popstate', this.fetchArticles)
+  },
+  beforeDestroy() {
+    window.removeEventListener('popstate', this.fetchArticles)
   },
   methods: {
     updateHandle(id: string) {
@@ -106,19 +104,20 @@ export default Vue.extend({
       this.popupOpen = ''
     },
     handleCurrentChange(page: number) {
-      this.$emit('update:page', page - 1)
-      const query: any = { ...this.$route.query, page: page - 1 }
+      this.fetchArticles(page - 1)
+      this.updateQuery(page - 1)
+    },
+    fetchArticles(page: number | object) {
+      // 判斷若是上下頁動作則另外補上query
+      if (typeof page === 'object') page = Number(this.$route.query.page) || 0
+      const query: any = { ...this.$route.query, page: page || undefined }
+      this.$emit('update:page', page)
       this.$emit('fetchArticles', query)
+    },
+    updateQuery(page: number) {
+      const query: any = { ...this.$route.query, page: page || undefined }
       this.$router.push({ query })
     },
-    // handleSizeChange(size: number) {
-    // console.log(size, this.page)
-    // this.$emit('update:page', 0)
-    // const query: any = { ...this.$route.query, size, page: 0 }
-    // this.$router.push({ query })
-    // this.$emit('update:size', size)
-    // this.$emit('fetchArticles', query)
-    // },
   },
 })
 </script>
