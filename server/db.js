@@ -196,7 +196,22 @@ class DB {
   remove(collectionName, json) {
     return new Promise((resolve, reject) => {
       this.connect().then((db) => {
-        db.collection(collectionName).removeOne(json, (err, result) => {
+        db.collection(collectionName).deleteOne(json, (err, result) => {
+          if (err) {
+            reject(err)
+            return
+          }
+
+          resolve(result)
+        })
+      })
+    })
+  }
+
+  removeMany(collectionName, json) {
+    return new Promise((resolve, reject) => {
+      this.connect().then((db) => {
+        db.collection(collectionName).deleteMany(json, (err, result) => {
           if (err) {
             reject(err)
             return
