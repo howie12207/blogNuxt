@@ -1,24 +1,75 @@
 <template>
-  <div @keyup.enter="login">
+  <div @keyup.enter="submit">
+    <div class="flex justify-center mb-4">
+      <span
+        :class="[
+          'btn',
+          'btn-primary',
+          'hover:btn-primary',
+          'mx-4',
+          { 'btn-primary-active': tab === 0 },
+        ]"
+        @click="tabHandler(0)"
+        >登入</span
+      >
+      <span
+        :class="[
+          'btn',
+          'btn-secondary',
+          'hover:btn-secondary',
+          'mx-4',
+          { 'btn-secondary-active': tab === 1 },
+        ]"
+        @click="tabHandler(1)"
+        >註冊</span
+      >
+    </div>
     <CommonBaseInput
       ref="accountInput"
+      :key="`account${tab}`"
       v-model="account.value"
       label="帳號"
       :is-valid.sync="account.isValid"
       :rules="account.rules"
     />
     <CommonBaseInput
+      :key="`password${tab}`"
       v-model="password.value"
       label="密碼"
       type="password"
       :is-valid.sync="password.isValid"
       :rules="password.rules"
+      @onKeyup="confirmPasswordHandler"
     />
-    <div class="flex justify-evenly">
-      <div class="btn btn-primary hover:btn-primary" @click="login">登入</div>
-      <!-- <div class="btn btn-secondary hover:btn-secondary" @click="register">
-        註冊
-      </div> -->
+    <template v-if="tab === 1">
+      <CommonBaseInput
+        :key="`confirmPassword${tab}`"
+        v-model="confirmPassword.value"
+        label="確認密碼"
+        type="password"
+        :is-valid.sync="confirmPassword.isValid"
+        :rules="confirmPassword.rules"
+        :error-message="confirmPassword.errorMessage"
+        @onKeyup="confirmPasswordHandler"
+        @onBlur="confirmPasswordHandler"
+      />
+      <CommonBaseInput
+        v-model="email.value"
+        label="信箱"
+        :is-valid.sync="email.isValid"
+        :rules="email.rules"
+      />
+    </template>
+    <div class="flex justify-end">
+      <span
+        :class="[
+          'btn',
+          tab === 0 ? 'btn-primary' : 'btn-secondary',
+          tab === 0 ? 'hover:btn-primary' : 'hover:btn-secondary',
+        ]"
+        @click="submit"
+        >{{ tab === 0 ? '登入' : '註冊' }}</span
+      >
     </div>
   </div>
 </template>
@@ -29,6 +80,7 @@ export default Vue.extend({
   name: 'Login',
   data() {
     return {
+      tab: 0,
       account: {
         value: '',
         isValid: false,
@@ -47,24 +99,92 @@ export default Vue.extend({
           limit: 'enAndNumber',
         },
       },
+      confirmPassword: {
+        value: '',
+        isValid: false,
+        rules: {
+          min: 6,
+          max: 20,
+          limit: 'enAndNumber',
+        },
+        errorMessage: '',
+      },
+      email: {
+        value: '',
+        isValid: false,
+        rules: {
+          limit: 'mail',
+        },
+      },
     }
   },
   mounted() {
-    setTimeout(() => {
-      ;(this as any).$refs.accountInput?.$el.children[1].children[0].children[0].focus()
-    }, 16)
+    this.focusAccount()
   },
   methods: {
-    login() {
-      if (!this.account.isValid || !this.password.isValid) {
+    focusAccount() {
+      setTimeout(() => {
+        ;(this as any).$refs.accountInput?.$el.children[1].children[0].children[0].focus()
+      }, 16)
+    },
+    tabHandler(target: number) {
+      if (this.tab === target) return
+      this.tab = target
+      this.reset()
+      this.focusAccount()
+    },
+    submit() {
+      const loginValid = this.account.isValid && this.password.isValid
+      const registerValid =
+        this.account.isValid &&
+        this.password.isValid &&
+        this.confirmPassword.isValid &&
+        this.email.isValid
+      if (
+        (this.tab === 0 && !loginValid) ||
+        (this.tab === 1 && !registerValid)
+      ) {
         this.$message.error('請填寫正確信息')
-        return
       }
-      this.$emit('login', {
-        account: this.account.value,
-        password: this.password.value,
-      })
+      if (this.tab === 0) {
+        this.$emit('login', {
+          account: this.account.value,
+          password: this.password.value,
+        })
+      } else {
+        this.$emit('register', {
+          account: this.account.value,
+          password: this.password.value,
+          email: this.email.value,
+        })
+      }
+    },
+    reset() {
+      this.account.value = ''
+      this.account.isValid = false
+      this.password.value = ''
+      this.password.isValid = false
+      this.confirmPassword.value = ''
+      this.confirmPassword.isValid = false
+      this.email.value = ''
+      this.email.isValid = false
+    },
+    confirmPasswordHandler() {
+      if (this.password.value !== this.confirmPassword.value) {
+        this.confirmPassword.errorMessage = '密碼不一致'
+      } else {
+        this.confirmPassword.errorMessage = ''
+        this.confirmPassword.isValid = true
+      }
     },
   },
 })
 </script>
+
+<style lang="scss" scoped>
+::v-deep .base_input {
+  .right {
+    flex-grow: 1;
+  }
+}
+</style>

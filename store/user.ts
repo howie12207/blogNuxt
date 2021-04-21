@@ -39,6 +39,13 @@ export const actions: ActionTree<RootState, RootState> = {
     }
     return !!res
   },
+  async REGISTER({ dispatch }, params) {
+    const res = await this.$req(`${PATH}/register`, 'post', params, true)
+    if (res) {
+      await dispatch('LOGIN', params)
+      return !!res
+    }
+  },
   async UPDATE_PASSWORD(_, params) {
     const res = await this.$req(`${PATH}/password`, 'put', params)
     if (res) {
