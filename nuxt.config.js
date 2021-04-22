@@ -17,9 +17,20 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
-  css: ['@/assets/css/global.scss', '@/assets/css/elementUI.css'],
+  css: [
+    '@/assets/css/global.scss',
+    '@/assets/css/elementUI.css',
+    'quill/dist/quill.core.css',
+    'quill/dist/quill.snow.css',
+    'quill/dist/quill.bubble.css',
+  ],
 
-  plugins: ['@/plugins/api', '@/plugins/elementUI', '@/plugins/format'],
+  plugins: [
+    '@/plugins/api',
+    '@/plugins/elementUI',
+    '@/plugins/format',
+    { src: '@/plugins/quillEditor', ssr: false },
+  ],
 
   components: true,
 
