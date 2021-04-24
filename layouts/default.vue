@@ -1,12 +1,11 @@
 <template>
   <div
-    class="fore_stage bg-yellow-50 min-h-screen bg-fixed bg-no-repeat bg-cover"
+    class="fore_stage pb-4 bg-yellow-50 min-h-screen bg-fixed bg-no-repeat bg-cover"
   >
-    <LayoutForestageHeader />
-    <div class="flex m-auto max-w-7xl pt-14">
-      <Nuxt class="forestage_bottom" />
-      <!-- <LayoutForestageRightBar /> -->
+    <div class="h-14">
+      <LayoutForestageHeader />
     </div>
+    <Nuxt class="m-auto" />
   </div>
 </template>
 

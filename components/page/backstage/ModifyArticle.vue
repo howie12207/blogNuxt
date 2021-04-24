@@ -105,7 +105,7 @@ export default Vue.extend({
               [{ font: [] }],
               [{ align: [] }],
               ['clean'],
-              ['image'],
+              ['link', 'image'],
             ],
           },
         },

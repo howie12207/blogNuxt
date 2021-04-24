@@ -1,19 +1,26 @@
 <template>
-  <div class="min-h-screen w-3/5 m-auto">
-    <PageHomeArticleCard
-      v-for="card in articles"
-      :key="card._id"
-      :article="card"
-    />
-    <el-pagination
-      v-if="total"
-      class="text-center mb-8"
-      background
-      layout="total, prev, pager, next"
-      :total="total"
-      :current-page="Number($route.query.page) + 1 || page"
-      @current-change="handleCurrentChange"
-    />
+  <div class="min-h-screen">
+    <div class="flex">
+      <div class="w-3/5 m-auto">
+        <PageHomeArticleCard
+          v-for="card in articles"
+          :key="card._id"
+          :article="card"
+        />
+        <el-pagination
+          v-if="total"
+          class="text-center mb-8"
+          background
+          layout="total, prev, pager, next"
+          :total="total"
+          :current-page="Number($route.query.page) + 1 || page"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+      <div class="w-60">
+        <PageHomeRightBar />
+      </div>
+    </div>
   </div>
 </template>
 
