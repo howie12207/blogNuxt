@@ -1,16 +1,18 @@
 <template>
   <div>
-    <div class="m-4 card">
+    <div class="m-4 card overflow-x-auto">
       <div class="flex bg-red-100">
-        <div class="item font-bold">創建時間</div>
+        <div class="hidden lg:block item font-bold">創建時間</div>
         <div class="item font-bold">標題</div>
-        <div class="item font-bold">內容</div>
+        <div class="hidden lg:block item font-bold">內容</div>
         <div class="item font-bold">操作</div>
       </div>
       <div v-for="list in articles" :key="list._id" class="flex">
-        <div class="item">{{ $format.toDateTime(list.createTime) }}</div>
+        <div class="hidden lg:block item">
+          {{ $format.toDateTime(list.createTime) }}
+        </div>
         <div class="item">{{ list.name }}</div>
-        <div class="item">{{ list.content }}</div>
+        <div class="hidden lg:block item">{{ list.content }}</div>
         <div class="item">
           <span
             class="btn btn-secondary hover:btn-secondary"
@@ -29,7 +31,8 @@
       v-if="total"
       class="text-center mb-8"
       background
-      layout="total, prev, pager, next"
+      layout="prev, pager, next"
+      small
       :total="total"
       :current-page="Number($route.query.page) + 1 || page"
       @current-change="handleCurrentChange"
@@ -124,6 +127,6 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .item {
-  @apply overflow-hidden whitespace-nowrap overflow-ellipsis p-4 w-1/4 text-center;
+  @apply overflow-hidden whitespace-nowrap overflow-ellipsis p-4 w-1/2 lg:w-1/4 text-center;
 }
 </style>

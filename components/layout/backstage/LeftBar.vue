@@ -1,5 +1,5 @@
 <template>
-  <nav class="w-40 pb-10 px-4 min-h-screen">
+  <nav class="w-40 pb-10 bg-gray-100 px-4 min-h-screen z-10">
     <img class="w-12 mx-auto mb-2" src="../img/logo.png" alt="logo" />
     <nuxt-link
       v-for="(item, index) in menu"
@@ -40,6 +40,11 @@ export default Vue.extend({
           title: '管理分類',
           route: '/backstage/manageSort',
           icon: 'el-icon-s-grid',
+        },
+        {
+          title: '會員列表',
+          route: '/backstage/memberList',
+          icon: 'el-icon-s-custom',
         },
       ],
     }

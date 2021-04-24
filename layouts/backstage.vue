@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <LayoutBackstageLeftBar class="bg-gray-100 border-r flex-shrink-0" />
+    <LayoutBackstageLeftBar class="hidden lg:block border-r flex-shrink-0" />
     <div class="flex-1 w-1/2">
       <LayoutBackstageHeader class="bg-gray-100 border-b" />
       <Nuxt />

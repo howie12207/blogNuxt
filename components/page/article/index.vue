@@ -1,15 +1,15 @@
 <template>
-  <div class="article p-10 mt-4 bg-red-50 rounded shadow">
+  <div class="article mx-4 p-4 lg:p-10 mt-4 bg-red-50 rounded shadow">
     <CommonBreadcrumbs class="mb-4" :nav="nav" />
-    <div class="flex justify-between text-xs text-gray-500">
-      <div>
+    <div class="lg:flex justify-between text-xs text-gray-500">
+      <p>
         建立時間：
         {{ $format.toDateTime(article.createTime) }}
-      </div>
-      <div>
+      </p>
+      <p>
         最近一次更新時間：
         {{ $format.toDateTime(article.updateTime) }}
-      </div>
+      </p>
     </div>
     <div class="text-3xl my-8 text-red-700 font-black">
       {{ article.name }}

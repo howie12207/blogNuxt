@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen">
     <div class="flex">
-      <div class="w-3/5 m-auto">
+      <div class="w-4/5 lg:w-3/5 m-auto">
         <PageHomeArticleCard
           v-for="card in articles"
           :key="card._id"
@@ -9,15 +9,16 @@
         />
         <el-pagination
           v-if="total"
+          small
           class="text-center mb-8"
           background
-          layout="total, prev, pager, next"
+          layout="prev,pager,next"
           :total="total"
           :current-page="Number($route.query.page) + 1 || page"
           @current-change="handleCurrentChange"
         />
       </div>
-      <div class="w-60">
+      <div class="w-60 hidden lg:block">
         <PageHomeRightBar />
       </div>
     </div>

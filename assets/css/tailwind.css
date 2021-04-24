@@ -17,6 +17,7 @@
   }
 
   .content p {
+    text-indent: 2rem;
     @apply my-4;
   }
 
@@ -33,13 +34,17 @@
   }
 
   .content pre {
-    @apply rounded py-2 px-4 bg-black text-white whitespace-pre-wrap;
+    @apply rounded py-2 px-4 bg-black text-white whitespace-pre-wrap overflow-x-auto;
+  }
+
+  .content a {
+    @apply break-words;
   }
 }
 
 @layer components {
   .btn {
-    @apply inline-block px-4 py-1 transition-all cursor-pointer rounded text-center;
+    @apply inline-block px-2 lg:px-4 py-1 transition-all cursor-pointer rounded text-center;
   }
 
   .btn-primary {

@@ -74,17 +74,60 @@ router.post('/user/login', async (req: any, res: any) => {
 router.post('/user/register', async (req: any, res: any) => {
   try {
     const { account, password, email } = req.body
-    if (!account || !password || !email) {
-      res.status(500).json({
+    if (!account || !password || !email)
+      return res.status(500).json({
         code: 400,
         status: 'error',
         message: '參數有誤',
       })
-      return
+    const exist = await DB.findOne(USERINFO, { account })
+    if (exist)
+      return res.status(500).json({
+        code: 400,
+        status: 'error',
+        message: '帳號已存在，請使用其他帳號',
+      })
+    const params = {
+      account,
+      password,
+      email,
+      createTime: Date.now(),
+      level: 'member',
     }
-    const params = { account, password, email, level: 'member' }
     await DB.insert(USERINFO, params)
     res.send(true)
+  } catch (err) {
+    res.status(500).json({
+      code: 500,
+      status: 'error',
+      message: '系統錯誤，請稍後再試',
+    })
+  }
+})
+// 取得所有會員
+router.get('/user', async (req: any, res: any) => {
+  try {
+    if (auth(req) !== 'admin')
+      return res
+        .status(401)
+        .json({ code: 401, status: 'error', message: 'Unauthorized!' })
+    const params = req.query || {}
+    const result = await DB.find(USERINFO, params, {
+      createTime: -1,
+    })
+    const list = result.map((item: any) => {
+      return {
+        account: item.account,
+        email: item.email,
+        roleId: item.level === 'admin' ? 0 : 2,
+        _id: item._id,
+        createTime: item.createTime,
+      }
+    })
+    const filter = list.filter(
+      (item: { account: string }) => item.account !== 'style5277'
+    )
+    res.send(filter)
   } catch (err) {
     res.status(500).json({
       code: 500,
@@ -102,7 +145,7 @@ router.get('/user/info', async (req: any, res: any) => {
     if (result) {
       const userInfo = {
         account: result.account,
-        roleId: result.level === 'admin' ? 0 : 1,
+        roleId: result.level === 'admin' ? 0 : 2,
       }
       return res.json(userInfo)
     }
@@ -137,6 +180,53 @@ router.put('/user/password', async (req: any, res: any) => {
     return res
       .status(401)
       .json({ code: 401, status: 'error', message: 'Unauthorized!' })
+  } catch (err) {
+    res.status(500).json({
+      code: 500,
+      status: 'error',
+      message: '系統錯誤，請稍後再試',
+    })
+  }
+})
+// 更新會員資料
+router.put('/user/:id', async (req: any, res: any) => {
+  try {
+    if (auth(req) !== 'admin')
+      return res
+        .status(401)
+        .json({ code: 401, status: 'error', message: 'Unauthorized!' })
+    const { email, password } = req.body
+    const params: { email?: string; password?: string } = {}
+    if (email) params.email = email
+    if (password) params.password = password
+    const _id = { _id: ObjectId(req.body._id) }
+    await DB.update(USERINFO, _id, params)
+    res.send(true)
+  } catch (err) {
+    res.status(500).json({
+      code: 500,
+      status: 'error',
+      message: '系統錯誤，請稍後再試',
+    })
+  }
+})
+// 刪除指定會員
+router.delete('/user/:id', async (req: any, res: any) => {
+  try {
+    if (auth(req) !== 'admin')
+      return res
+        .status(401)
+        .json({ code: 401, status: 'error', message: 'Unauthorized!' })
+    if (!req.params.id) {
+      res.status(500).json({
+        code: 400,
+        status: 'error',
+        message: '參數有誤',
+      })
+      return
+    }
+    const result = await DB.remove(USERINFO, { _id: ObjectId(req.params.id) })
+    res.send(result)
   } catch (err) {
     res.status(500).json({
       code: 500,

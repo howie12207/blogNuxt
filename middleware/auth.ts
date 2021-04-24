@@ -5,8 +5,9 @@ const metaCheck: Middleware = ({ store, route, redirect }) => {
     if (
       route.path.includes('backstage') &&
       store.state.user?.info?.roleId !== 0
-    )
+    ) {
       return redirect('/')
+    }
   })
 }
 
