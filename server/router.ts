@@ -27,7 +27,7 @@ router.get('/test1', async (req: any, res: any) => {
     res.json(result)
   } catch (err) {
     res
-      .status(500)
+      .status(200)
       .json({ code: 500, status: 'error', mmessage: '系統錯誤，請稍後再試' })
   }
 })
@@ -37,7 +37,7 @@ router.post('/user/login', async (req: any, res: any) => {
   try {
     const { account, password } = req.body
     if (!account || !password) {
-      res.status(500).json({
+      res.status(200).json({
         code: 400,
         status: 'error',
         message: '參數有誤',
@@ -56,14 +56,14 @@ router.post('/user/login', async (req: any, res: any) => {
       )
       res.json({ token })
     } else {
-      res.status(500).json({
+      res.status(200).json({
         code: 400,
         status: 'error',
         message: '帳密錯誤',
       })
     }
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -75,14 +75,14 @@ router.post('/user/register', async (req: any, res: any) => {
   try {
     const { account, password, email } = req.body
     if (!account || !password || !email)
-      return res.status(500).json({
+      return res.status(200).json({
         code: 400,
         status: 'error',
         message: '參數有誤',
       })
     const exist = await DB.findOne(USERINFO, { account })
     if (exist)
-      return res.status(500).json({
+      return res.status(200).json({
         code: 400,
         status: 'error',
         message: '帳號已存在，請使用其他帳號',
@@ -97,7 +97,7 @@ router.post('/user/register', async (req: any, res: any) => {
     await DB.insert(USERINFO, params)
     res.send(true)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -129,7 +129,7 @@ router.get('/user', async (req: any, res: any) => {
     )
     res.send(filter)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -153,7 +153,7 @@ router.get('/user/info', async (req: any, res: any) => {
       .status(401)
       .json({ code: 401, status: 'error', message: 'Unauthorized!' })
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -174,14 +174,14 @@ router.put('/user/password', async (req: any, res: any) => {
         return res.json(true)
       }
       return res
-        .status(500)
+        .status(200)
         .json({ code: 400, status: 'error', message: '密碼錯誤!' })
     }
     return res
       .status(401)
       .json({ code: 401, status: 'error', message: 'Unauthorized!' })
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -203,7 +203,7 @@ router.put('/user/:id', async (req: any, res: any) => {
     await DB.update(USERINFO, _id, params)
     res.send(true)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -218,7 +218,7 @@ router.delete('/user/:id', async (req: any, res: any) => {
         .status(401)
         .json({ code: 401, status: 'error', message: 'Unauthorized!' })
     if (!req.params.id) {
-      res.status(500).json({
+      res.status(200).json({
         code: 400,
         status: 'error',
         message: '參數有誤',
@@ -228,7 +228,7 @@ router.delete('/user/:id', async (req: any, res: any) => {
     const result = await DB.remove(USERINFO, { _id: ObjectId(req.params.id) })
     res.send(result)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -245,7 +245,7 @@ router.post('/article', async (req: any, res: any) => {
         .json({ code: 401, status: 'error', message: 'Unauthorized!' })
     const { name, content, createTime, updateTime, sorts } = req.body
     if (!name || !content || !createTime || !updateTime) {
-      res.status(500).json({
+      res.status(200).json({
         code: 400,
         status: 'error',
         message: '參數有誤',
@@ -256,7 +256,7 @@ router.post('/article', async (req: any, res: any) => {
     await DB.insert(ARTICLES, params)
     res.send(true)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -284,7 +284,7 @@ router.get('/article', async (req: any, res: any) => {
     ])
     res.send({ content, totalElements })
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -297,7 +297,7 @@ router.get('/article/:id', async (req: any, res: any) => {
     const result = await DB.findOne(ARTICLES, { _id: ObjectId(req.params.id) })
     res.send(result)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -313,7 +313,7 @@ router.put('/article/:id', async (req: any, res: any) => {
         .json({ code: 401, status: 'error', message: 'Unauthorized!' })
     const { name, content, createTime, updateTime, sorts } = req.body
     if (!name || !content || !createTime || !updateTime) {
-      res.status(500).json({
+      res.status(200).json({
         code: 400,
         status: 'error',
         message: '參數有誤',
@@ -325,7 +325,7 @@ router.put('/article/:id', async (req: any, res: any) => {
     await DB.update(ARTICLES, _id, params)
     res.send(true)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -340,7 +340,7 @@ router.delete('/article/:id', async (req: any, res: any) => {
         .status(401)
         .json({ code: 401, status: 'error', message: 'Unauthorized!' })
     if (!req.params.id) {
-      res.status(500).json({
+      res.status(200).json({
         code: 400,
         status: 'error',
         message: '參數有誤',
@@ -351,7 +351,7 @@ router.delete('/article/:id', async (req: any, res: any) => {
     await DB.removeMany(COMMENTS, { articleId: ObjectId(req.params.id) })
     res.send(result)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -368,7 +368,7 @@ router.post('/comment', async (req: any, res: any) => {
         .json({ code: 401, status: 'error', message: 'Unauthorized!' })
     const { createTime, account, content, articleId } = req.body
     if (!createTime || !account || !content || !articleId) {
-      res.status(500).json({
+      res.status(200).json({
         code: 400,
         status: 'error',
         message: '參數有誤',
@@ -384,7 +384,7 @@ router.post('/comment', async (req: any, res: any) => {
     const result = await DB.insert(COMMENTS, params)
     res.json(result)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -412,7 +412,7 @@ router.get('/comment', async (req: any, res: any) => {
     ])
     res.send({ content, totalElements })
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -440,7 +440,7 @@ router.get('/comment/:id', async (req: any, res: any) => {
     ])
     res.send({ content, totalElements })
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -455,7 +455,7 @@ router.delete('/comment/:id', async (req: any, res: any) => {
         .status(401)
         .json({ code: 401, status: 'error', message: 'Unauthorized!' })
     if (!req.params.id) {
-      res.status(500).json({
+      res.status(200).json({
         code: 400,
         status: 'error',
         message: '參數有誤',
@@ -465,7 +465,7 @@ router.delete('/comment/:id', async (req: any, res: any) => {
     const result = await DB.remove(COMMENTS, { _id: ObjectId(req.params.id) })
     res.send(result)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -482,7 +482,7 @@ router.post('/sort', async (req: any, res: any) => {
         .json({ code: 401, status: 'error', message: 'Unauthorized!' })
     const { name, createTime } = req.body
     if (!name || !createTime) {
-      res.status(500).json({
+      res.status(200).json({
         code: 400,
         status: 'error',
         message: '參數有誤',
@@ -492,7 +492,7 @@ router.post('/sort', async (req: any, res: any) => {
     const result = await DB.insert(SORT, req.body)
     res.send(result)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -508,7 +508,7 @@ router.get('/sort', async (req: any, res: any) => {
     })
     res.send(result)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',
@@ -523,7 +523,7 @@ router.delete('/sort/:id', async (req: any, res: any) => {
         .status(401)
         .json({ code: 401, status: 'error', message: 'Unauthorized!' })
     if (!req.params.id) {
-      res.status(500).json({
+      res.status(200).json({
         code: 400,
         status: 'error',
         message: '參數有誤',
@@ -533,7 +533,7 @@ router.delete('/sort/:id', async (req: any, res: any) => {
     const result = await DB.remove(SORT, { _id: ObjectId(req.params.id) })
     res.send(result)
   } catch (err) {
-    res.status(500).json({
+    res.status(200).json({
       code: 500,
       status: 'error',
       message: '系統錯誤，請稍後再試',

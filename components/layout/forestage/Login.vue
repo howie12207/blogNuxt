@@ -1,76 +1,76 @@
 <template>
-  <div @keyup.enter="submit">
-    <div class="flex justify-center mb-4">
+  <div class="dark:bg-gray-300" @keyup.enter="submit">
+    <div class="flex mb-8">
       <span
+        v-for="(item, index) of tabs"
+        :key="index"
         :class="[
-          'btn',
-          'btn-primary',
-          'hover:btn-primary',
-          'mx-4',
-          { 'btn-primary-active': tab === 0 },
+          'w-1/2',
+          'p-2',
+          'text-center',
+          'inline-block',
+          'bg-gray-300',
+          'transition-all',
+          'hover:opacity-70',
+          { 'bg-green-500': tab === index },
+          { 'text-white': tab === index },
+          'cursor-pointer',
+          'dark:bg-gray-600',
+          { 'dark:bg-green-900': tab === index },
         ]"
-        @click="tabHandler(0)"
-        >登入</span
-      >
-      <span
-        :class="[
-          'btn',
-          'btn-secondary',
-          'hover:btn-secondary',
-          'mx-4',
-          { 'btn-secondary-active': tab === 1 },
-        ]"
-        @click="tabHandler(1)"
-        >註冊</span
+        @click="tabHandler(index)"
+        >{{ item }}</span
       >
     </div>
-    <CommonBaseInput
-      ref="accountInput"
-      :key="`account${tab}`"
-      v-model="account.value"
-      label="帳號"
-      :is-valid.sync="account.isValid"
-      :rules="account.rules"
-    />
-    <CommonBaseInput
-      :key="`password${tab}`"
-      v-model="password.value"
-      label="密碼"
-      type="password"
-      :is-valid.sync="password.isValid"
-      :rules="password.rules"
-      @onKeyup="confirmPasswordHandler"
-    />
-    <template v-if="tab === 1">
+    <section class="py-4 px-8">
       <CommonBaseInput
-        :key="`confirmPassword${tab}`"
-        v-model="confirmPassword.value"
-        label="確認密碼"
+        ref="accountInput"
+        :key="`account${tab}`"
+        v-model="account.value"
+        label="帳號"
+        :is-valid.sync="account.isValid"
+        :rules="account.rules"
+      />
+      <CommonBaseInput
+        :key="`password${tab}`"
+        v-model="password.value"
+        label="密碼"
         type="password"
-        :is-valid.sync="confirmPassword.isValid"
-        :rules="confirmPassword.rules"
-        :error-message="confirmPassword.errorMessage"
+        :is-valid.sync="password.isValid"
+        :rules="password.rules"
         @onKeyup="confirmPasswordHandler"
-        @onBlur="confirmPasswordHandler"
       />
-      <CommonBaseInput
-        v-model="email.value"
-        label="信箱"
-        :is-valid.sync="email.isValid"
-        :rules="email.rules"
-      />
-    </template>
-    <div class="flex justify-end">
-      <span
-        :class="[
-          'btn',
-          tab === 0 ? 'btn-primary' : 'btn-secondary',
-          tab === 0 ? 'hover:btn-primary' : 'hover:btn-secondary',
-        ]"
-        @click="submit"
-        >{{ tab === 0 ? '登入' : '註冊' }}</span
-      >
-    </div>
+      <template v-if="tab === 1">
+        <CommonBaseInput
+          :key="`confirmPassword${tab}`"
+          v-model="confirmPassword.value"
+          label="確認密碼"
+          type="password"
+          :is-valid.sync="confirmPassword.isValid"
+          :rules="confirmPassword.rules"
+          :error-message="confirmPassword.errorMessage"
+          @onKeyup="confirmPasswordHandler"
+          @onBlur="confirmPasswordHandler"
+        />
+        <CommonBaseInput
+          v-model="email.value"
+          label="信箱"
+          :is-valid.sync="email.isValid"
+          :rules="email.rules"
+        />
+      </template>
+      <div class="flex justify-end">
+        <span
+          :class="[
+            'btn',
+            tab === 0 ? 'btn-primary' : 'btn-secondary',
+            tab === 0 ? 'hover:btn-primary' : 'hover:btn-secondary',
+          ]"
+          @click="submit"
+          >{{ tab === 0 ? '登入' : '註冊' }}</span
+        >
+      </div>
+    </section>
   </div>
 </template>
 
@@ -81,6 +81,7 @@ export default Vue.extend({
   data() {
     return {
       tab: 0,
+      tabs: ['登入', '註冊'],
       account: {
         value: '',
         isValid: false,
@@ -145,6 +146,7 @@ export default Vue.extend({
         (this.tab === 1 && !registerValid)
       ) {
         this.$message.error('請填寫正確信息')
+        return
       }
       if (this.tab === 0) {
         this.$emit('login', {

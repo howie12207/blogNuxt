@@ -60,5 +60,10 @@ export default {
     middleware: ['auth'],
   },
 
+  loading: {
+    color: '#3b82f6',
+    height: '4px',
+  },
+
   serverMiddleware: ['~/server/index.ts'],
 }

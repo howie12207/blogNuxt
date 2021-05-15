@@ -1,7 +1,16 @@
 <template>
   <header
-    class="fixed z-10 w-full bg-gray-600 bg-opacity-90 h-14 flex justify-end items-center"
+    class="fixed z-10 w-full bg-gray-500 bg-opacity-90 h-14 flex justify-end items-center dark:bg-gray-800"
   >
+    <CommonSwitchBtn
+      v-model="darkMode"
+      left-label="深色"
+      label-color="#fff"
+      class="mr-8"
+      :width="56"
+      :height="24"
+      @input="changeMode"
+    />
     <el-dropdown
       v-if="$store.state.user.login"
       class="mr-4"
@@ -27,21 +36,22 @@
         class="btn btn-primary hover:btn-primary mr-4"
         @click="popup('login')"
       >
-        <i class="el-icon-user icon"></i> 登入 / 註冊
-      </span>
+        <i class="el-icon-user icon"></i> 登入</span
+      >
     </template>
 
-    <transition name="fade">
-      <CommonPopup v-if="popupTarget" width="400px" @close="closePopup">
-        <template #content>
-          <LayoutForestageLogin
-            v-if="popupTarget === 'login'"
-            class="p-12"
-            @login="login"
-            @register="register"
-          />
-        </template> </CommonPopup
-    ></transition>
+    <CommonPopup
+      v-if="popupTarget"
+      class="popup"
+      width="400px"
+      @close="closePopup"
+    >
+      <LayoutForestageLogin
+        v-if="popupTarget === 'login'"
+        @login="login"
+        @register="register"
+      />
+    </CommonPopup>
   </header>
 </template>
 
@@ -53,6 +63,7 @@ export default Vue.extend({
   data() {
     return {
       popupTarget: '',
+      darkMode: this.$store.state.darkMode,
     }
   },
   computed: {
@@ -82,6 +93,10 @@ export default Vue.extend({
         this.$message.success('註冊成功')
       }
     },
+    changeMode(darkMode: boolean) {
+      localStorage.setItem('darkMode', String(darkMode))
+      this.$store.commit('SET_DARK_MODE')
+    },
     logout() {
       this.$store.commit('user/SET_USER', false)
       this.$store.commit('user/SET_USER_INFO', null)
@@ -97,3 +112,9 @@ export default Vue.extend({
   },
 })
 </script>
+
+<style scoped>
+::v-deep .popup.popup_mask .popup_content {
+  padding: 0;
+}
+</style>

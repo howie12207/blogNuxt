@@ -1,31 +1,8 @@
 import { ActionTree, MutationTree } from 'vuex'
 
 export const state = () => ({
-  isDesktop: true,
-
   pageLoading: false,
-
-  language: {
-    current: {
-      title: '',
-      language: '',
-    },
-    list: [
-      {
-        title: 'ภาษาไทย',
-        language: 'th',
-      },
-
-      {
-        title: 'English',
-        language: 'en',
-      },
-      {
-        title: '中文',
-        language: 'cn',
-      },
-    ],
-  },
+  darkMode: false,
 
   meta: {},
 })
@@ -33,32 +10,18 @@ export const state = () => ({
 export type RootState = ReturnType<typeof state>
 
 export const mutations: MutationTree<RootState> = {
-  SET_IS_DESKTOP(state, userAgent: string) {
-    state.isDesktop = !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      userAgent
-    )
-  },
-
-  //   SET_LANGUAGE(state, lang) {
-  //     for (const i in state.language.list) {
-  //       if (state.language.list[i].language === lang) {
-  //         state.language.current = state.language.list[i]
-  //       }
-  //     }
-  //   },
-
   SET_PAGE_LOADING(state, status) {
     state.pageLoading = status
   },
-
-  //   SET_META(state, meta) {
-  //     state.meta = meta
-  //   },
+  SET_DARK_MODE(state) {
+    if (process.client) {
+      state.darkMode = localStorage.getItem('darkMode') === 'true'
+    }
+  },
 }
 
 export const actions: ActionTree<RootState, RootState> = {
-  async nuxtServerInit(store: any, { req }: any) {
-    store.commit('SET_IS_DESKTOP', req.headers['user-agent'])
+  async nuxtServerInit(store: any) {
     await store.dispatch('user/FETCH_USER_DATA')
   },
 }

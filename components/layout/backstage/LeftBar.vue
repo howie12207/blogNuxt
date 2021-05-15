@@ -1,11 +1,12 @@
 <template>
-  <nav class="w-40 pb-10 bg-gray-100 px-4 min-h-screen z-10">
+  <nav class="w-40 pb-10 px-4 min-h-screen z-10 box-border">
     <img class="w-12 mx-auto mb-2" src="../img/logo.png" alt="logo" />
     <nuxt-link
       v-for="(item, index) in menu"
       :key="index"
       :to="item.route"
-      class="block text-gray-700 p-2 rounded hover:bg-gray-200 active:bg-gray-200"
+      class="block text-gray-700 p-2 rounded hover:bg-gray-200 active:bg-gray-200 dark:hover:bg-gray-500 dark:text-gray-200"
+      @click.native="routeTo(item.route)"
     >
       <i :class="[item.icon, 'text-blue-400']"></i>
       {{ item.title }}
@@ -48,6 +49,11 @@ export default Vue.extend({
         },
       ],
     }
+  },
+  methods: {
+    routeTo(route: string) {
+      this.$emit('routeTo', route)
+    },
   },
 })
 </script>

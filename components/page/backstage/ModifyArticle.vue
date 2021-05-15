@@ -1,11 +1,11 @@
 <template>
-  <div class="p-4 m-4 card">
+  <div class="p-4 m-4 text-gray-500 card">
     <CommonBaseInput
       v-model="name.value"
       label="標題"
       :is-valid.sync="name.isValid"
     />
-    <div class="text-sm text-gray-500">分類</div>
+    <div class="text-sm">分類</div>
     <el-checkbox-group v-model="checkList" class="my-4">
       <el-checkbox
         v-for="(item, index) in sortList"
@@ -13,7 +13,7 @@
         :label="item.name"
       ></el-checkbox>
     </el-checkbox-group>
-    <div class="text-sm text-gray-500">內容</div>
+    <div class="text-sm">內容</div>
     <div class="flex my-4">
       <div
         :class="[

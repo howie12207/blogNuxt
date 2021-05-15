@@ -6,7 +6,9 @@
         alt="avatar"
         class="img w-40 h-40 rounded-full mx-auto"
       />
-      <p class="text-xl my-1 font-bold text-blue-800">Howie Chen</p>
+      <p class="text-xl my-1 font-bold text-blue-800 dark:text-blue-300">
+        Howie Chen
+      </p>
       <div class="flex justify-center my-2">
         <a href="https://github.com/howie12207" target="_blank"
           ><img src="./img/github.svg" alt="github" class="mx-4 cursor-pointer"
@@ -18,7 +20,9 @@
             class="w-6 h-6 mx-4 cursor-pointer"
         /></a>
       </div>
-      <p class="text-left text-indent text-yellow-800 text-sm">
+      <p
+        class="text-left text-indent text-yellow-800 text-sm dark:text-yellow-300"
+      >
         一年經驗的『前端工程師』，使用Vue框架，後端node搭配mongoDB，歡迎一起分享交流。
       </p>
     </div>

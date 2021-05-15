@@ -1,12 +1,12 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <article
-    class="text-xs lg:text-sm shadow-xl bg-red-50 rounded p-4 mt-4 mb-12"
+    class="text-xs lg:text-sm shadow-xl bg-red-50 rounded p-4 mt-4 mb-12 dark:bg-yellow-900 dark:text-red-200"
   >
     <div class="text-right text-xs mb-2">
       {{ $format.toDate(article.createTime) }}
     </div>
-    <div class="text-xl mb-2 text-red-700 font-black">
+    <div class="text-xl mb-2 text-red-700 font-black dark:text-red-400">
       {{ article.name }}
     </div>
     <div
@@ -18,7 +18,7 @@
       class="block text-red-400 text-right underline my-1 ml-auto w-max"
       >閱讀全文..</nuxt-link
     >
-    <div class="text-gray-500 text-xs">
+    <div class="text-gray-500 text-xs dark:text-gray-300">
       <span v-for="(item, index) in article.sorts" :key="index" class="mr-2"
         >#{{ item }}</span
       >

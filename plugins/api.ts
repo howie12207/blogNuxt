@@ -31,9 +31,6 @@ const requestModules: Plugin = (
 
   $axios.onRequest((config: any) => {
     start = new Date().getTime()
-    config.headers['Accept-Language'] = store.state.language.current.language
-      ? store.state.language.current.language
-      : 'cn'
     // token setting
     const access = app.$cookies.get('access')
     if (access) {
@@ -63,6 +60,7 @@ const requestModules: Plugin = (
         message: response.data.message,
         type: 'error',
       })
+      return Promise.resolve(false)
     }
     if (response?.data?.code === 401) {
       app.$cookies.remove('access')
@@ -71,6 +69,7 @@ const requestModules: Plugin = (
       } else {
         redirect('/')
       }
+      return Promise.resolve(false)
     }
   })
 
