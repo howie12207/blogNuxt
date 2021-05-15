@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import {
   Input,
-  Message,
   Checkbox,
   CheckboxGroup,
   Pagination,
@@ -18,5 +17,4 @@ export default () => {
   Vue.component(Dropdown.name, Dropdown)
   Vue.component(DropdownMenu.name, DropdownMenu)
   Vue.component(DropdownItem.name, DropdownItem)
-  Vue.prototype.$message = Message
 }

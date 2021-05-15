@@ -29,6 +29,7 @@ export default {
     '@/plugins/api',
     '@/plugins/elementUI',
     '@/plugins/format',
+    '@/plugins/message',
     { src: '@/plugins/quillEditor', ssr: false },
   ],
 

@@ -2,7 +2,7 @@
   <div>
     <div class="h-16 flex items-center justify-end">
       <CommonIconMenu
-        v-if="windowWidth <= 1008"
+        v-show="windowWidth <= 1008"
         v-model="leftbarOpen"
         main-color="#3b82f6"
         class="mr-auto ml-4"
@@ -53,6 +53,7 @@ export default Vue.extend({
     }
   },
   mounted() {
+    this.windowWidth = document.body.offsetWidth
     addEventListener('resize', this.resize)
   },
 
