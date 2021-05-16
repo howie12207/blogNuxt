@@ -27,6 +27,15 @@
         </div>
       </div>
     </div>
+    <CommonPagination
+      :total="total"
+      bg
+      :page.sync="page"
+      :size.sync="size"
+      :layout="['total', 'size', 'pager']"
+      @changePage="changePage"
+      @changeSize="changeSize"
+    />
     <transition name="fade">
       <CommonPopup v-if="popupOpen === 'modify'" @close="closePopup">
         <div class="mt-8 ml-8 mb-7 text-sm text-gray-500">
@@ -88,6 +97,18 @@ export default Vue.extend({
       type: Array,
       default: () => [],
     },
+    page: {
+      type: Number,
+      default: 0,
+    },
+    size: {
+      type: Number,
+      default: 10,
+    },
+    total: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
@@ -118,7 +139,34 @@ export default Vue.extend({
       },
     }
   },
+  mounted() {
+    window.addEventListener('popstate', this.fetchMemberList)
+  },
+  beforeDestroy() {
+    window.removeEventListener('popstate', this.fetchMemberList)
+  },
   methods: {
+    fetchMemberList(params: any) {
+      const query: any = {
+        ...this.$route.query,
+        ...params,
+      }
+      this.$emit('update:page', Number(query.page) || 0)
+      this.$emit('update:size', Number(query.size) || 10)
+      this.$emit('fetchMemberList', query)
+    },
+    updateQuery(params: object) {
+      const query = { ...this.$route.query, ...params }
+      this.$router.push({ query })
+    },
+    changePage(page: number) {
+      this.fetchMemberList({ page, size: this.size })
+      this.updateQuery({ page, size: this.size })
+    },
+    changeSize(size: number) {
+      this.fetchMemberList({ size, page: 0 })
+      this.updateQuery({ size, page: 0 })
+    },
     deleteHandle(id: string) {
       this.$emit('deleteMember', id)
       this.closePopup()

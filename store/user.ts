@@ -52,8 +52,8 @@ export const actions: ActionTree<RootState, RootState> = {
       return !!res
     }
   },
-  async FETCH_MEMBER_LIST() {
-    const res = await this.$req(`${PATH}`, 'get')
+  async FETCH_MEMBER_LIST(_, params) {
+    const res = await this.$req(`${PATH}`, 'get', params)
     return res || []
   },
   async DELETE_MEMBER(_, params) {

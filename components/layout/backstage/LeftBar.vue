@@ -59,7 +59,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.nuxt-link-exact-active {
+.nuxt-link-active {
   background-color: rgba(229, 231, 235, 1);
   color: #3b82f6;
 }

@@ -3,6 +3,7 @@
     class="flex-grow"
     :comment-list="commentList"
     :page.sync="page"
+    :size.sync="size"
     :total="total"
     @fetchCommentList="fetchCommentList"
     @deleteComment="deleteComment"
@@ -25,7 +26,8 @@ export default Vue.extend({
   data() {
     return {
       commentList: [],
-      page: 0,
+      page: Number(this.$route.query.page) || 0,
+      size: Number(this.$route.query.size) || 10,
       total: 0,
     }
   },

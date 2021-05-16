@@ -111,11 +111,23 @@ router.get('/user', async (req: any, res: any) => {
       return res
         .status(401)
         .json({ code: 401, status: 'error', message: 'Unauthorized!' })
-    const params = req.query || {}
-    const result = await DB.find(USERINFO, params, {
-      createTime: -1,
-    })
-    const list = result.map((item: any) => {
+    const {
+      where = {},
+      sort = { createTime: -1 },
+      page = 0,
+      size = 10,
+    } = req.query
+    const params = {
+      where,
+      sort,
+      limit: Number(size),
+      skip: Number(page) * Number(size),
+    }
+    const [content, totalElements] = await Promise.all([
+      DB.findTable(USERINFO, params),
+      DB.findCount(USERINFO, params),
+    ])
+    const list = content.map((item: any) => {
       return {
         account: item.account,
         email: item.email,
@@ -124,10 +136,7 @@ router.get('/user', async (req: any, res: any) => {
         createTime: item.createTime,
       }
     })
-    const filter = list.filter(
-      (item: { account: string }) => item.account !== 'style5277'
-    )
-    res.send(filter)
+    res.send({ content: list, totalElements })
   } catch (err) {
     res.status(200).json({
       code: 500,

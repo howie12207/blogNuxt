@@ -22,16 +22,15 @@
         </div>
       </div>
     </div>
-    <el-pagination
-      v-if="total"
-      class="text-center mb-8"
-      background
-      layout="total, prev, pager, next"
+    <CommonPagination
       :total="total"
-      :current-page="Number($route.query.page) + 1 || page"
-      @current-change="handleCurrentChange"
-    >
-    </el-pagination>
+      bg
+      :page.sync="page"
+      :size.sync="size"
+      :layout="['total', 'size', 'pager']"
+      @changePage="changePage"
+      @changeSize="changeSize"
+    />
     <transition name="fade">
       <CommonPopup v-if="popupOpen === 'delete'" @close="closePopup">
         <template #content>
@@ -96,6 +95,27 @@ export default Vue.extend({
     window.removeEventListener('popstate', this.fetchCommentList)
   },
   methods: {
+    fetchCommentList(params: any) {
+      const query: any = {
+        ...this.$route.query,
+        ...params,
+      }
+      this.$emit('update:page', Number(query.page) || 0)
+      this.$emit('update:size', Number(query.size) || 10)
+      this.$emit('fetchCommentList', query)
+    },
+    updateQuery(params: object) {
+      const query = { ...this.$route.query, ...params }
+      this.$router.push({ query })
+    },
+    changePage(page: number) {
+      this.fetchCommentList({ page, size: this.size })
+      this.updateQuery({ page, size: this.size })
+    },
+    changeSize(size: number) {
+      this.fetchCommentList({ size, page: 0 })
+      this.updateQuery({ size, page: 0 })
+    },
     deleteHandle(id: string) {
       this.$emit('deleteComment', id)
       this.closePopup()
@@ -106,21 +126,6 @@ export default Vue.extend({
     },
     closePopup() {
       this.popupOpen = ''
-    },
-    handleCurrentChange(page: number) {
-      this.fetchCommentList(page - 1)
-      this.updateQuery(page - 1)
-    },
-    fetchCommentList(page: number | object) {
-      // 判斷若是上下頁動作則另外補上query
-      if (typeof page === 'object') page = Number(this.$route.query.page) || 0
-      const query: any = { ...this.$route.query, page: page || undefined }
-      this.$emit('update:page', page)
-      this.$emit('fetchCommentList', query)
-    },
-    updateQuery(page: number) {
-      const query: any = { ...this.$route.query, page: page || undefined }
-      this.$router.push({ query })
     },
   },
 })

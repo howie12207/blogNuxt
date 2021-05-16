@@ -40,12 +40,12 @@
         文本編輯
       </div>
     </div>
-    <el-input
+    <textarea
       v-if="contentTab === 'html'"
       v-model="content"
-      type="textarea"
-      :rows="10"
-      placeholder="请输入内容"
+      placeholder="請輸入內容"
+      class="p-4 w-full focus:outline-none shadow focus:ring-1 bg-gray-200 rounded resize-none transition-shadow dark:bg-gray-700 dark:text-gray-200"
+      rows="10"
     />
     <quill-editor
       v-else

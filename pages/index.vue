@@ -3,6 +3,7 @@
     :articles="articles"
     :total="total"
     :page.sync="page"
+    :size.sync="size"
     @fetchArticles="fetchArticles"
   />
 </template>
@@ -23,7 +24,8 @@ export default Vue.extend({
     return {
       articles: [],
       total: 0,
-      page: 0,
+      page: Number(this.$route.query.page) || 0,
+      size: Number(this.$route.query.size) || 10,
     }
   },
   methods: {

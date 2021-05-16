@@ -3,6 +3,7 @@
     class="flex-grow overflow-hidden"
     :articles="articles"
     :page.sync="page"
+    :size.sync="size"
     :total="total"
     @deleteArticle="deleteArticle"
     @fetchArticles="fetchArticles"
@@ -25,14 +26,9 @@ export default Vue.extend({
   data() {
     return {
       articles: [],
-      page: 0,
-      // size: 10,
+      page: Number(this.$route.query.page) || 0,
+      size: Number(this.$route.query.size) || 10,
       total: 0,
-      // pageOption: {
-      //   page: 1,
-      //   size: 10,
-      //   total: 0,
-      // },
     }
   },
   methods: {
