@@ -6,13 +6,7 @@
       :is-valid.sync="name.isValid"
     />
     <div class="text-sm">分類</div>
-    <el-checkbox-group v-model="checkList" class="my-4">
-      <el-checkbox
-        v-for="(item, index) in sortList"
-        :key="index"
-        :label="item.name"
-      ></el-checkbox>
-    </el-checkbox-group>
+    <CommonBaseCheckbox v-model="checked" :options="options" />
     <div class="text-sm">內容</div>
     <div class="flex my-4">
       <div
@@ -84,7 +78,8 @@ export default Vue.extend({
         isValid: false,
       },
       content: '',
-      checkList: [],
+      checked: [],
+      // checkList: [],
       contentTab: 'html',
       editorOption: {
         bounds: 'app',
@@ -112,12 +107,19 @@ export default Vue.extend({
       },
     }
   },
+  computed: {
+    options() {
+      return this.sortList.map((item: any) => {
+        return { label: item.name, value: item.name }
+      })
+    },
+  },
   mounted() {
     if (this.target) {
       this.name.value = this.article.name
       this.name.isValid = true
       this.content = this.article.content
-      this.checkList = this.article.sorts ? this.article.sorts : []
+      this.checked = this.article.sorts ? this.article.sorts : []
     }
   },
   methods: {
@@ -138,7 +140,7 @@ export default Vue.extend({
         content: this.content,
         createTime: this.target ? this.article.createTime : now,
         updateTime: now,
-        sorts: this.checkList,
+        sorts: this.checked,
       }
       if (!this.target) {
         this.$emit('createArticle', params)

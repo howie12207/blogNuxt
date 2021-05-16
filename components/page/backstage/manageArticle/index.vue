@@ -38,17 +38,15 @@
     />
     <transition name="fade">
       <CommonPopup v-if="popupOpen === 'delete'" @close="closePopup">
-        <template #content>
-          <div class="text-center m-8">
-            確認要刪除文章 <span class="text-red-500">{{ tempData.name }}</span>
-          </div>
-          <div class="flex justify-evenly my-4">
-            <span class="btn btn-primary" @click="deleteHandle(tempData._id)"
-              >確認</span
-            >
-            <span class="btn btn-secondary" @click="closePopup">取消</span>
-          </div>
-        </template>
+        <div class="text-center m-8">
+          確認要刪除文章 <span class="text-red-500">{{ tempData.name }}</span>
+        </div>
+        <div class="flex justify-evenly my-4">
+          <span class="btn btn-primary" @click="deleteHandle(tempData._id)"
+            >確認</span
+          >
+          <span class="btn btn-secondary" @click="closePopup">取消</span>
+        </div>
       </CommonPopup>
     </transition>
   </div>

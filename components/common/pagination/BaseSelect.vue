@@ -104,11 +104,13 @@ export default Vue.extend({
       this.open = false
     },
     openHandle() {
-      const totalHeight = document.body.offsetHeight
-      const selectOffsetTop = this.$refs.base_select.offsetTop
-      const optionsHeight = this.$refs.base_select_options.offsetHeight
-      if (selectOffsetTop + optionsHeight + 40 > totalHeight)
-        this.$refs.base_select_options.style.top = `-${optionsHeight}px`
+      if (this.open) {
+        this.$refs.base_select.style.height = 'initial'
+      } else {
+        this.$refs.base_select.style.height = `${
+          this.$refs.base_select_options.offsetHeight + 40
+        }px`
+      }
       this.open = !this.open
     },
     selectHandle(option) {

@@ -268,7 +268,6 @@ export default Vue.extend({
 
 .pagination .pager {
   display: flex;
-  align-items: center;
   list-style: none;
   user-select: none;
   vertical-align: top;

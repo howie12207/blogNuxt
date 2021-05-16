@@ -115,7 +115,6 @@ export default Vue.extend({
     },
 
     startTimer() {
-      console.log(333)
       if (this.duration > 0) {
         this.timer = setTimeout(() => {
           if (!this.closed) {

@@ -49,7 +49,7 @@ export default Vue.extend({
         this.$message.success('修改成功')
         ;(this as any).$refs.memberList.closePopup()
       }
-      await this.fetchMemberList()
+      await this.fetchMemberList(this.$route.query)
     },
   },
 })
